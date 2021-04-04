@@ -1,0 +1,40 @@
+{
+  "urls": {
+    "urlAuthorize":"http://localhost:3105/oauth2/authorize",
+    "redirectUri":"http://localhost:9001/integracao/callback",
+    "urlToken":"http://localhost:3005/oauth2/token",
+    "entities":"http://localhost:1027/v2/entities/"
+  },
+  "clients": [ {
+    "name":"Alice",
+    "clientId":"tutorial-dckr-site-0000-xpresswebapp",
+    "secret":"tutorial-dckr-site-0000-clientsecret",
+    "login":"alice-the-admin@test.com",
+    "password":"test",
+    "responseType":"code",
+    "state":"abcde1",
+    "code":null,
+    "token": {
+      "accessToken":null,
+      "tokenType":null,
+      "expiresIn":null,
+      "refreshToken":null
+    }},
+    {
+      "name":"Alice",
+      "clientId":"tutorial-dckr-site-0000-xpresswebapp",
+      "secret":"tutorial-dckr-site-0000-clientsecret",
+      "login":"alice-the-admin@test.com",
+      "password":"test",
+      "responseType":"code",
+      "state":"abcde1",
+      "code":null,
+      "token": {
+        "accessToken":null,
+        "tokenType":null,
+        "expiresIn":null,
+        "refreshToken":null
+      }
+
+    }]
+}

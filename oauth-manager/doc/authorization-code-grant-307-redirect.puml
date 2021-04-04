@@ -1,0 +1,54 @@
+@startuml
+!define LIGHTBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+'diagram title'
+title Ataque **307 Redirect** no OAuth 2.0 Authorization Code Grant
+autonumber
+
+legend top
+      O ataque **307 Redirect** é...
+end legend
+
+actor "User \n**(Browser)**" as USER #LightBlue
+
+box
+  participant "Client\n"  as CLIENT  #LightBlue
+end box
+
+box
+  participant "Authorization Server\n **(AS)**" as AS #LightBlue
+  participant "Resource Server\n **(RS)**" as RS #LightBlue
+end box
+
+'passo 1
+USER -> CLIENT: **POST** www.site.com
+
+'passo 2
+CLIENT --> USER: 302 Redirect
+    note left of  CLIENT #LightYellow
+        //Client// redireciona //User// para o AS **/oauth2/authorize**
+        passando client_id, redirect_uri, state, response_type=**code**
+    end note
+
+'passo 3
+USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&state=xyz&client_id=abc
+
+'passo 4
+AS --> USER: 302 Redirect
+  note left of  AS #LightYellow
+        AS utiliza **redirect_uri** para retornar ao //Client//
+        tela para efetuar longin
+    end note
+
+'passo 5
+USER -> AS: **POST** /login
+    note right of  USER #LightYellow
+        //User// efetua login no AS com **username, password**
+    end note
+
+'passo 6
+AS --> USER: <font color=red><b>307 Redirect \n(Redirect para o //Client// **redirect_uri + authorization_code + state**)
+
+
+@enduml

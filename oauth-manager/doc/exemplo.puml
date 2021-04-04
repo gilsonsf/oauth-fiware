@@ -1,0 +1,120 @@
+@startuml
+'skinparam monochrome true
+'skinparam shadowing false
+'diagram title'
+title OPBAN2-1680 - Consultar de forma online o Serviço de Identificação da conta
+autonumber
+
+legend top
+      Consultar os dados de Identificação de Conta correspondente a fase 2 do OpenBanking
+      nas instituições financeiras fornecedoras participantes da Fase 2, após consentimento válido.
+end legend
+
+
+actor "App Bradesco" as BRAD
+    ref over BRAD
+    OBS: Abstraindo N camadas antes de
+    chegar ao Motor agregador
+    end ref
+
+
+box "Motor Agregador Service"
+  participant "APIs" as AGREGADOR
+end box
+
+box "RECEPTORES"
+  participant "Event Hub" as EVENT_HUB
+  participant "API Interna" as API_Interna
+  participant "API Capture" as API_Capture
+
+
+  database "Cosmo DB" as COSMO_DB
+end box
+
+box " CONSENTIMENTO "
+  participant "APIs" as CONSENTIMENTO
+end box
+
+box " OPEN BANKING ASPSP " #LightBlue
+  participant "APIs" as OPEN_BANKING
+end box
+
+
+BRAD -> AGREGADOR:
+
+AGREGADOR -> EVENT_HUB: publish an event
+
+API_Interna -> EVENT_HUB: subscribe an event
+ /' activate "EVENT_HUB"'/
+
+EVENT_HUB --> API_Interna:result data
+
+API_Interna -> CONSENTIMENTO: **GET** v1/consent/api/internal
+
+CONSENTIMENTO --> API_Interna: 200 OK
+  note right of API_Capture
+        {
+          "data": {
+              "consentId": "string",
+              "creationDateTime": "2021-05-21T08:30:00Z",
+              "status": "AUTHORISED",
+              "statusUpdateDateTime": "2021-05-21T08:30:00Z",
+            ...
+        }
+    end note
+
+API_Interna -> API_Interna: Valida Consentimento
+    note right of  API_Interna #LightBlue
+        **NOTA PARA O DESENVOLVEDOR**
+    end note
+
+API_Interna -> EVENT_HUB: publish an event
+
+API_Capture -> EVENT_HUB:subscribe an event
+
+EVENT_HUB --> API_Capture:result data
+
+API_Capture -> OPEN_BANKING:  **GET** /accounts/v1/accounts/{accountId}
+
+OPEN_BANKING --> API_Capture: 200 OK
+    note right of API_Capture
+        {
+          "data": {
+            "compeCode": "001",
+            "branchCode": "6272",
+            "number": "24550245",
+            ...
+        }
+    end note
+
+API_Capture -> COSMO_DB: persist data
+    alt verifica o fornecedor dos dados
+        API_Capture -> COSMO_DB: persist data conforme a \norigem da chave de consentimento
+    end alt
+
+
+API_Capture -> EVENT_HUB: publish an event
+AGREGADOR -> EVENT_HUB: subscribe an event
+
+
+/'alt Condição Alternativa
+    API_Interna -> API_Capture: Descricao da Condicao
+end alt'/
+
+/'EVENT_HUB -> CONSENTIMENTO: POST /acessos/onboarding
+note right of EVENT_HUB
+**Request header**
+
+  acess-token - API acess token
+
+**Request body**
+{
+  "externalDeviceHash": "string", (originHash da Request)
+  "cpf": "string"  (Será recuperado do JWT)
+  "midia": "string", (Código da midia fixo 515)
+}
+end note'/
+
+
+
+@enduml
