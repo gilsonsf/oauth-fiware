@@ -1,0 +1,75 @@
+[
+  {
+    "id":1,
+    "name":"Alice",
+    "clientId":"tutorial-dckr-site-0000-xpresswebapp",
+    "secret":"tutorial-dckr-site-0000-clientsecret",
+    "login":"alice-the-admin@test.com",
+    "password":"test",
+    "responseType":"code",
+    "state":"alice_state",
+    "code":null,
+    "token": {
+      "accessToken":null,
+      "tokenType":null,
+      "expiresIn":null,
+      "refreshToken":null
+    },
+    "urls": {
+      "urlAuthorize":"http://localhost:3005/oauth2/authorize",
+      "redirectUri":"http://localhost:9001/client/callback",
+      "urlToken":"http://localhost:3005/oauth2/token",
+      "entities":"http://localhost:1027/v2/entities/",
+      "iss": null
+    }
+  },
+  {
+    "id":2,
+      "name":"Bob",
+      "clientId":"tutorial-dckr-site-0000-xpresswebapp",
+      "secret":"tutorial-dckr-site-0000-clientsecret",
+      "login":"bob-the-manager@test.com",
+      "password":"test",
+      "responseType":"code",
+      "state":"bob_state",
+      "code":null,
+      "token": {
+        "accessToken":null,
+        "tokenType":null,
+        "expiresIn":null,
+        "refreshToken":null
+      },
+      "urls": {
+        "urlAuthorize":"http://localhost:3005/oauth2/authorize",
+        "redirectUri":"http://localhost:9001/client/callback",
+        "urlToken":"http://localhost:3005/oauth2/token",
+        "entities":"http://localhost:1027/v2/entities/",
+        "iss": null
+      }
+  },
+  {
+    "id":3,
+    "name":"Charlie",
+    "clientId":"tutorial-dckr-site-0000-xpresswebapp",
+    "secret":"tutorial-dckr-site-0000-clientsecret",
+    "login":"charlie-security@test.com",
+    "password":"test",
+    "responseType":"code",
+    "state":"charlie_state",
+    "code":null,
+    "token": {
+      "accessToken":null,
+      "tokenType":null,
+      "expiresIn":null,
+      "refreshToken":null
+    },
+    "urls": {
+      "urlAuthorize":"http://localhost:3005/oauth2/authorize",
+      "redirectUri":"http://localhost:9001/client/callback",
+      "urlToken":"http://localhost:3005/oauth2/token",
+      "entities":"http://localhost:1027/v2/entities/",
+      "iss": null
+    }
+  }
+]
+

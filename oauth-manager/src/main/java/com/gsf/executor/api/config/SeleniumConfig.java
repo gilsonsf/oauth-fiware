@@ -5,6 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.sql.Driver;
+import java.util.concurrent.TimeUnit;
+
 public class SeleniumConfig {
 
     private WebDriver driver;
@@ -37,14 +40,15 @@ public class SeleniumConfig {
         element.click();
     }
 
-    public  void findElements() {
-        driver.findElement(By.id("id_email")).sendKeys("alice-the-admin@test.com");
-        driver.findElement(By.id("id_password")).sendKeys("test");
+    public  void findElements(String email, String password) {
+        driver.findElement(By.id("id_email")).sendKeys(email);
+        driver.findElement(By.id("id_password")).sendKeys(password);
         driver.findElement(By.xpath(".//button[@type='submit']")).click();
     }
 
     public void initDriver() {
         driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
     }
 
     public String getTitle() {
@@ -53,5 +57,9 @@ public class SeleniumConfig {
 
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
+    }
+
+    public WebDriver getDriver() {
+        return driver;
     }
 }

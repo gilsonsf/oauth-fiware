@@ -52,6 +52,23 @@ CLIENT --> AAS: 302 Redirect para **A-AS** /authorize \npassando client_id, redi
 'passo 4
 AAS --> USER: 302 Redirect para **H-AS** /authorize \npassando client_id, redirect_uri, state
 
+autonumber stop
+group Variação usando um atacante web
+    'passo 1
+    USER -> CLIENT: **POST** www.site.com
+
+    'passo 2
+    CLIENT --> AAS: redirect
+
+    'passo 3
+     AAS --> AS: redirect
+
+     'passo 4
+     AAS --> AS: redirect
+
+end group
+
+autonumber 5
 'passo 5
 USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&state=xyz&client_id=abc
 

@@ -1,19 +1,19 @@
 package com.gsf.executor.api.task;
 
-import com.gsf.executor.api.entity.Client;
+import com.gsf.executor.api.entity.ClientTemplate;
 
 public class OAuthCSRFAttackTask extends GenericTask {
 
     public OAuthCSRFAttackTask(){}
 
-    public OAuthCSRFAttackTask(Client client) {
+    public OAuthCSRFAttackTask(ClientTemplate client) {
         super(client);
     }
 
     @Override
-    public void executeTask(Client client) {
+    public void executeTask(ClientTemplate client) {
         //EXECUTAR O FLOW OAuthCSRFAttackTask
-        logger.info("OAuthCSRFAttackTask Init >> tentativa de ataque ao: "+client);
+        LOGGER.info("OAuthCSRFAttackTask Init >> tentativa de ataque ao: "+client);
     }
 
 }

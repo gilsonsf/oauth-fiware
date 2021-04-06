@@ -1,67 +1,64 @@
 package com.gsf.executor.api.task;
 
-import com.google.gson.Gson;
-import com.gsf.executor.api.entity.Client;
 import com.gsf.executor.api.entity.ClientTemplate;
-import com.gsf.executor.api.entity.OAuth2Token;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import org.openqa.selenium.By;
 
 public class OAuthHonestClientTask extends GenericTask {
 
     public OAuthHonestClientTask(){}
 
-    public OAuthHonestClientTask(Client client) {
+    public OAuthHonestClientTask(ClientTemplate client) {
         super(client);
     }
 
     @Override
-    public void executeTask(Client client) {
-        //EXECUTAR O FLOW X
+    public void executeTask(ClientTemplate client) {
 
-        logger.info("OAuthHonestClientTask Init  "+client);
+        LOGGER.info("OAuthHonestClientTask Init  "+ client);
+
+        executeFlow(client);
+
+//        seleniumConfig.initDriver();
+//
+//        seleniumConfig.get(authorizationCodeTokenService.getAuthorizationEndpoint(client));
+//
+//        LOGGER.info("titulo >> " + seleniumConfig.getTitle());
+//
+//        seleniumConfig.findElements(client.getLogin(), client.getPassword());
+//
+//        LOGGER.info(seleniumConfig.getCurrentUrl());
+//
+//
+//        seleniumConfig.close();
+
+
+        LOGGER.info("OAuthHonestClientTask End  "+ client);
+    }
+
+    private void executeFlow(ClientTemplate client) {
 
         seleniumConfig.initDriver();
 
-        seleniumConfig.get(authorizationCodeTokenService.getAuthorizationEndpoint(client));
+        seleniumConfig.get(client.getSiteUrl());
 
-        logger.info("titulo >> " + seleniumConfig.getTitle());
+        LOGGER.info("Client page title >> " + seleniumConfig.getTitle());
 
-        seleniumConfig.findElements();
+        seleniumConfig.getDriver().findElement(By.name("login")).sendKeys(client.getLogin());
+        seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
 
-        logger.info(seleniumConfig.getCurrentUrl());
+        try { Thread.sleep(1000); } catch (Exception ign) {}
 
-        String code = authorizationCodeTokenService.extractCode(seleniumConfig.getCurrentUrl());
-        OAuth2Token token = authorizationCodeTokenService.getToken(code, client);
+        seleniumConfig.getDriver().get(seleniumConfig.getCurrentUrl());
 
-        logger.info(token.toString());
+        LOGGER.info("Navigate to page title >> " + seleniumConfig.getDriver().getTitle());
+
+        seleniumConfig.getDriver().findElement(By.id("id_email")).sendKeys(client.getLogin());
+        seleniumConfig.getDriver().findElement(By.id("id_password")).sendKeys(client.getPassword());
+        seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
+
+        LOGGER.info("Current URL >> " + seleniumConfig.getCurrentUrl());
 
         seleniumConfig.close();
-
-        for (int i = 0; i < 3 ; i++) {
-            authorizationCodeTokenService.getEntity(token.getAccessToken(), client);
-        }
-
-        logger.info("End  "+client);
-    }
-
-    public void getGson() {
-        Gson gson = new Gson();
-        try {
-            ClientTemplate client = gson.fromJson(new FileReader("src/main/resources/client-template.json"),ClientTemplate.class);
-            client.getClients();
-            System.out.println(client);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void main(String[] args) {
-        new OAuthHonestClientTask().getGson();
     }
 
 }

@@ -1,0 +1,24 @@
+[
+  {
+    "id":1,
+    "name":"Alice",
+    "login":"alice-the-admin@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001"
+  },
+  {
+    "id":2,
+    "name":"Bob",
+    "login":"bob-the-manager@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001"
+  },
+  {
+    "id":3,
+    "name":"Charlie",
+    "login":"charlie-security@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001"
+  }
+]
+

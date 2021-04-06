@@ -2,11 +2,14 @@ package com.gsf.executor.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.gsf.executor.api.entity.Client;
-import com.gsf.executor.api.task.GenericTask;
+import com.gsf.executor.api.entity.ClientTemplate;
 import com.gsf.executor.api.entity.User;
-import com.gsf.executor.api.event.CustomSpringEventPublisher;
+import com.gsf.executor.api.event.ClientEventPublisher;
+import com.gsf.executor.api.repository.ClientTemplateRepository;
 import com.gsf.executor.api.repository.UserRepository;
+import com.gsf.executor.api.task.GenericTask;
+import com.gsf.executor.api.task.OAuth307RedirectAttackTask;
+import com.gsf.executor.api.task.OAuthCSRFAttackTask;
 import com.gsf.executor.api.task.OAuthHonestClientTask;
 import com.gsf.executor.api.task.OAuthMixUpAttackTask;
 import org.slf4j.Logger;
@@ -32,11 +35,10 @@ public class ManagerService {
     @Autowired
     private UserRepository repository;
 
-    Object target;
     private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
     @Autowired
-    private CustomSpringEventPublisher publisher;
+    private ClientEventPublisher publisher;
 
     @Autowired
     @Qualifier("taskExecutor")
@@ -51,17 +53,38 @@ public class ManagerService {
     }
 
     @Async
-    public CompletableFuture<GenericTask> createTask(Client client) {
-        logger.info("create by "+Thread.currentThread().getName());
+    public CompletableFuture<GenericTask> createTask(ClientTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
+        GenericTask genericTask = createGenericTask(client, idClientToBeAttacked, idKindOfAttack);
+
+        return CompletableFuture.completedFuture(genericTask);
+    }
+
+    private GenericTask createGenericTask(ClientTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
 
         GenericTask genericTask = null;
-        if(client.getState().equalsIgnoreCase("abcde2")) {
-            genericTask = new OAuthMixUpAttackTask(client);
+
+        if(client.getId() == idClientToBeAttacked) {
+
+            switch(idKindOfAttack) {
+                case 1:
+                    genericTask = new OAuthMixUpAttackTask(client);
+                    break;
+                case 2:
+                    genericTask = new OAuth307RedirectAttackTask(client);
+                    break;
+                case 3:
+                    genericTask = new OAuthCSRFAttackTask(client);
+                    break;
+                default:
+                    genericTask = new OAuthHonestClientTask(client);
+            }
+
         } else {
             genericTask = new OAuthHonestClientTask(client);
         }
 
-        return CompletableFuture.completedFuture(genericTask);
+       return genericTask;
+
     }
 
     public void startProcess(int minutes) {
@@ -69,11 +92,10 @@ public class ManagerService {
         ThreadPoolTaskExecutor ex = ( ThreadPoolTaskExecutor)executor;
 
         LocalDateTime end = LocalDateTime.now().plusMinutes(minutes);
-        List<Client> clients = getClients();
+        List<ClientTemplate> clients = ClientTemplateRepository.getAll();
 
         while (LocalDateTime.now().isBefore(end)) {
             publisher.publishCustomEvent(clients);
-            //Thread.sleep(5000);
 
             while (ex.getActiveCount() > 0) {
                 logger.info("in while >> " + ex.getActiveCount());
@@ -89,12 +111,12 @@ public class ManagerService {
         logger.info("End process >> "+LocalDateTime.now());
     }
 
-    private List<Client> getClients() {
+    private List<ClientTemplate> getClients() {
 
-        Type listOfMyClassObject = new TypeToken<ArrayList<Client>>() {}.getType();
-        List<Client> clients = null;
+        Type listOfMyClassObject = new TypeToken<ArrayList<ClientTemplate>>() {}.getType();
+        List<ClientTemplate> clients = null;
         try {
-            clients = new Gson().fromJson(new FileReader("src/main/resources/clients.json"), listOfMyClassObject);
+            clients = new Gson().fromJson(new FileReader("src/main/resources/client-template.json"), listOfMyClassObject);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
