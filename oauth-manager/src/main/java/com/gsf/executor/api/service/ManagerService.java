@@ -2,11 +2,9 @@ package com.gsf.executor.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.gsf.executor.api.entity.ClientTemplate;
-import com.gsf.executor.api.entity.User;
+import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.event.ClientEventPublisher;
-import com.gsf.executor.api.repository.ClientTemplateRepository;
-import com.gsf.executor.api.repository.UserRepository;
+import com.gsf.executor.api.repository.UserTemplateRepository;
 import com.gsf.executor.api.task.GenericTask;
 import com.gsf.executor.api.task.OAuth307RedirectAttackTask;
 import com.gsf.executor.api.task.OAuthCSRFAttackTask;
@@ -32,9 +30,6 @@ import java.util.concurrent.Executor;
 @Service
 public class ManagerService {
 
-    @Autowired
-    private UserRepository repository;
-
     private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
     @Autowired
@@ -44,22 +39,14 @@ public class ManagerService {
     @Qualifier("taskExecutor")
     private Executor executor;
 
-
     @Async
-    public CompletableFuture<List<User>> findAllUsers(){
-        logger.info("get list of user by "+Thread.currentThread().getName());
-        List<User> users=repository.findAll();
-        return CompletableFuture.completedFuture(users);
-    }
-
-    @Async
-    public CompletableFuture<GenericTask> createTask(ClientTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
+    public CompletableFuture<GenericTask> createTask(UserTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
         GenericTask genericTask = createGenericTask(client, idClientToBeAttacked, idKindOfAttack);
 
         return CompletableFuture.completedFuture(genericTask);
     }
 
-    private GenericTask createGenericTask(ClientTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
+    private GenericTask createGenericTask(UserTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
 
         GenericTask genericTask = null;
 
@@ -92,7 +79,7 @@ public class ManagerService {
         ThreadPoolTaskExecutor ex = ( ThreadPoolTaskExecutor)executor;
 
         LocalDateTime end = LocalDateTime.now().plusMinutes(minutes);
-        List<ClientTemplate> clients = ClientTemplateRepository.getAll();
+        List<UserTemplate> clients = UserTemplateRepository.getAll();
 
         while (LocalDateTime.now().isBefore(end)) {
             publisher.publishCustomEvent(clients);
@@ -111,10 +98,10 @@ public class ManagerService {
         logger.info("End process >> "+LocalDateTime.now());
     }
 
-    private List<ClientTemplate> getClients() {
+    private List<UserTemplate> getClients() {
 
-        Type listOfMyClassObject = new TypeToken<ArrayList<ClientTemplate>>() {}.getType();
-        List<ClientTemplate> clients = null;
+        Type listOfMyClassObject = new TypeToken<ArrayList<UserTemplate>>() {}.getType();
+        List<UserTemplate> clients = null;
         try {
             clients = new Gson().fromJson(new FileReader("src/main/resources/client-template.json"), listOfMyClassObject);
         } catch (FileNotFoundException e) {

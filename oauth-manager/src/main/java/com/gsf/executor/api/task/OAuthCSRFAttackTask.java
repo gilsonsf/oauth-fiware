@@ -1,19 +1,31 @@
 package com.gsf.executor.api.task;
 
-import com.gsf.executor.api.entity.ClientTemplate;
+import com.gsf.executor.api.entity.UserTemplate;
 
 public class OAuthCSRFAttackTask extends GenericTask {
 
     public OAuthCSRFAttackTask(){}
 
-    public OAuthCSRFAttackTask(ClientTemplate client) {
+    public OAuthCSRFAttackTask(UserTemplate client) {
         super(client);
     }
 
     @Override
-    public void executeTask(ClientTemplate client) {
-        //EXECUTAR O FLOW OAuthCSRFAttackTask
-        LOGGER.info("OAuthCSRFAttackTask Init >> tentativa de ataque ao: "+client);
+    public void executeTask(UserTemplate user) {
+        LOGGER.info("OAuthCSRFAttackTask Init "+ user);
+
+        seleniumConfig.initDriver();
+
+        accessClient(user);
+
+        String currentUrl = createAttackRequest(seleniumConfig.getCurrentUrl());
+        accessAuthorisationServer(user, currentUrl);
+
+        getErrors();
+
+        seleniumConfig.close();
+
+        LOGGER.info("OAuthCSRFAttackTask End  "+ user);
     }
 
 }

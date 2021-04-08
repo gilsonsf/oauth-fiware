@@ -96,7 +96,6 @@ public class AuthorizationCodeTokenService {
                 getBodyKeyrock(authorizationCode, client.getUrls().getRedirectUri()),
                 getHeader(clientAuthentication),
                 HttpMethod.POST,
-//                URI.create("http://localhost:3005/oauth2/token")
                 URI.create(client.getUrls().getUrlToken())
         );
 

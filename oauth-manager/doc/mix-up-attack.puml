@@ -3,12 +3,12 @@
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
 'diagram title'
-title Ataque **Mix-Up Attack** no no OAuth 2.0 Authorization Code Grant \n(Using code injection to break authorization)
+title Ataque **Mix-Up Attack** no OAuth 2.0 Authorization Code Grant \n(Uso de //code injection// para quebrar autorização)
 autonumber
 
 legend top
       Em **Mix-Up Attack** o atacante confunde um cliente sobre qual AS o usuário escolheu no início
-      do processo de login / autorização para adquirir o authorization_code ou o access_token.
+      do processo de login/autorização para adquirir o authorization_code ou o access_token.
 end legend
 
 actor "User \n**(Browser)**" as USER #LightBlue
@@ -18,7 +18,7 @@ box
 end box
 
 box
-  participant "Client\n**(Victim)**"  as CLIENT  #LightBlue
+  participant "Client\n"  as CLIENT  #LightBlue
 end box
 
 
@@ -28,20 +28,13 @@ box
 end box
 
 'passo 1
-USER -> AAS: **POST** www.site.com
- note left of  AAS #LightYellow
-        O ataque inicia quando o //user//
-        seleciona o H-AS para efetuar log in
+USER -> CLIENT: **POST** www.site.com
+ note over of  AAS #LightYellow
+        O ataque inicia quando o //user// seleciona o H-AS para efetuar login.
+         O //attacker// intercepta a solicitação para o //client// e modifica seu conteúdo: troca H-AS por A-AS
     end note
 
 'passo 2
-AAS --> CLIENT: **POST** www.site.com
-    note right of  AAS #LightYellow
-        O //attacker// intercepta a solicitação para o //client//
-        e modifica seu conteúdo: troca H-AS por A-AS
-    end note
-
-'passo 3
 CLIENT --> AAS: 302 Redirect para **A-AS** /authorize \npassando client_id, redirect_uri, state
     note right of  AAS #LightYellow
         O //attacker// intercepta novamente a solicitação
@@ -49,49 +42,49 @@ CLIENT --> AAS: 302 Redirect para **A-AS** /authorize \npassando client_id, redi
         o //user// para para o H-AS
     end note
 
-'passo 4
+'passo 3
 AAS --> USER: 302 Redirect para **H-AS** /authorize \npassando client_id, redirect_uri, state
 
-autonumber stop
-group Variação usando um atacante web
-    'passo 1
-    USER -> CLIENT: **POST** www.site.com
-
-    'passo 2
-    CLIENT --> AAS: redirect
-
-    'passo 3
-     AAS --> AS: redirect
-
-     'passo 4
-     AAS --> AS: redirect
-
-end group
-
-autonumber 5
-'passo 5
+    'autonumber stop
+    'group Variação usando um atacante web
+    '    'passo 1
+    '    USER -> CLIENT: **POST** www.site.com
+    '
+    '    'passo 2
+    '    CLIENT --> AAS: redirect
+    '
+    '    'passo 3
+    '     AAS --> AS: redirect
+    '
+    '     'passo 4
+    '     AAS --> AS: redirect
+    '
+    'end group
+    '
+    'autonumber 5
+'passo 4
 USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&state=xyz&client_id=abc
 
-'passo 6
+'passo 5
 AS --> USER: 302 Redirect
   note over of  AAS #LightYellow
         H-AS utiliza **redirect_uri** para retornar ao //Client//
         tela para efetuar login
     end note
 
-'passo 7
+'passo 6
 USER -> AS: **POST** /login
     note right of  USER #LightYellow
         //User// efetua login no AS com **username, password**
     end note
 
-'passo 8
+'passo 7
 AS --> USER: 302 Redirect para o //Client// **redirect_uri + authorization_code + state**)
 
-'passo 9
+'passo 8
 USER -> CLIENT: **GET** redirect_uri, authorization_code, state
 
-'passo 10
+'passo 9
 CLIENT -> AAS:**POST** /oauth2/token
     note left of  CLIENT #LightYellow
         Devido o passo 2, o //client// acredita que o **authorization_code**
@@ -99,39 +92,39 @@ CLIENT -> AAS:**POST** /oauth2/token
         no A-AS
     end note
 
-'passo 11
+'passo 10
 AAS -> CLIENT: **POST** www.site.com
     note right of  AAS #LightYellow
         //Attacker// inicia um novo OAuth //flow// com o
         //client// usando seu proprio //browser//
     end note
 
-'passo 12
+'passo 11
 CLIENT --> AAS: 302 redirect /authorize passando \nclient_id, redirect_uri, state**(new)**
     note right of  AAS #LightYellow
         //Client// redireciona para H-AS que é ignorado
     end note
 
-'passo 13
+'passo 12
 AAS -> CLIENT: **GET** redirect_uri, authorization_code, state**(new)**
     note right of  AAS #LightYellow
         redirecionamento do cliente usando um novo state e
         o authorization_code adquirido anteriormente
     end note
 
-'passo 14
+'passo 13
 CLIENT -> AS: **POST** /oauth2/token
 
-'passo 15
-AS -> CLIENT: RESPONSE **acess_token**
+'passo 14
+AS -> CLIENT: 200 OK **acess_token**
 
-'passo 16
+'passo 15
 CLIENT -> RS: **GET** /resource
 
-'passo 17
+'passo 16
 RS -> CLIENT: 200 OK //protected resource//
 
-'passo 18
+'passo 17
 CLIENT -> AAS: 200 OK //protected resource//
 
 

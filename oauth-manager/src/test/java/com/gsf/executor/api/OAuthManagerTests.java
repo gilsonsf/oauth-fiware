@@ -1,8 +1,9 @@
 package com.gsf.executor.api;
 
-import com.google.gson.Gson;
-import com.gsf.executor.api.entity.ClientTemplate;
+import com.gsf.executor.api.entity.UserTemplate;
+import com.gsf.executor.api.repository.UserTemplateRepository;
 import com.gsf.executor.api.task.OAuthHonestClientTask;
+import com.gsf.executor.api.task.OAuthMixUpAttackTask;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -13,17 +14,12 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
@@ -189,14 +185,16 @@ class OAuthManagerTests {
 	}
 
 	@Test
-	public void testConvertJsonToArrayList() {
-		Gson gson = new Gson();
-		try {
-			List<ClientTemplate> client = gson.fromJson(new FileReader("src/main/resources/client-template.json"),List.class);
-			System.out.println(client);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	public void testTask() {
+		UserTemplate userTemplate = UserTemplateRepository.findById(5);
+
+		//new OAuthCSRFAttackTask(clientTemplate);
+		//new OAuth307RedirectAttackTask(clientTemplate);
+		new OAuthHonestClientTask(userTemplate);
+
+		//new OAuthMixUpAttackTask(userTemplate);
+		System.out.println("testing");
+
 
 	}
 

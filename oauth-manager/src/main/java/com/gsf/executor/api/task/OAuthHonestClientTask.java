@@ -1,64 +1,36 @@
 package com.gsf.executor.api.task;
 
-import com.gsf.executor.api.entity.ClientTemplate;
-import org.openqa.selenium.By;
+import com.gsf.executor.api.entity.UserTemplate;
 
 public class OAuthHonestClientTask extends GenericTask {
 
     public OAuthHonestClientTask(){}
 
-    public OAuthHonestClientTask(ClientTemplate client) {
+    public OAuthHonestClientTask(UserTemplate client) {
         super(client);
     }
 
     @Override
-    public void executeTask(ClientTemplate client) {
+    public void executeTask(UserTemplate user) {
 
-        LOGGER.info("OAuthHonestClientTask Init  "+ client);
-
-        executeFlow(client);
-
-//        seleniumConfig.initDriver();
-//
-//        seleniumConfig.get(authorizationCodeTokenService.getAuthorizationEndpoint(client));
-//
-//        LOGGER.info("titulo >> " + seleniumConfig.getTitle());
-//
-//        seleniumConfig.findElements(client.getLogin(), client.getPassword());
-//
-//        LOGGER.info(seleniumConfig.getCurrentUrl());
-//
-//
-//        seleniumConfig.close();
-
-
-        LOGGER.info("OAuthHonestClientTask End  "+ client);
-    }
-
-    private void executeFlow(ClientTemplate client) {
+        LOGGER.info("OAuthHonestClientTask Init  "+ user);
 
         seleniumConfig.initDriver();
 
-        seleniumConfig.get(client.getSiteUrl());
+        accessClient(user);
 
-        LOGGER.info("Client page title >> " + seleniumConfig.getTitle());
+        String currentUrl = seleniumConfig.getCurrentUrl();
+        LOGGER.info("Current URL 1>> " + currentUrl);
+        accessAuthorisationServer(user, currentUrl);
 
-        seleniumConfig.getDriver().findElement(By.name("login")).sendKeys(client.getLogin());
-        seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
-
-        try { Thread.sleep(1000); } catch (Exception ign) {}
-
-        seleniumConfig.getDriver().get(seleniumConfig.getCurrentUrl());
-
-        LOGGER.info("Navigate to page title >> " + seleniumConfig.getDriver().getTitle());
-
-        seleniumConfig.getDriver().findElement(By.id("id_email")).sendKeys(client.getLogin());
-        seleniumConfig.getDriver().findElement(By.id("id_password")).sendKeys(client.getPassword());
-        seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
-
-        LOGGER.info("Current URL >> " + seleniumConfig.getCurrentUrl());
+        LOGGER.info("Current URL 2>> " + seleniumConfig.getCurrentUrl());
 
         seleniumConfig.close();
+
+        LOGGER.info("OAuthHonestClientTask End  "+ user);
     }
+
+
+
 
 }

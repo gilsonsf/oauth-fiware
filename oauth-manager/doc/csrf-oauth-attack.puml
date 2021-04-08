@@ -11,9 +11,9 @@ legend top
       permite que um invasor induza o usuário a realizar ações que eles não pretendem realizar.
 end legend
 
-actor "User \n**(Browser)**" as USER #LightBlue
-
 actor "Vitima \n**(Browser)**" as VITIMA #LightBlue
+
+actor "Attacker \n**(Browser)**" as USER #Red
 
 box
   participant "Client\n"  as CLIENT  #LightBlue
@@ -30,46 +30,56 @@ USER -> CLIENT: **POST** www.site.com
 'passo 2
 CLIENT --> USER: 302 Redirect
     note left of  CLIENT #LightYellow
-        //Client// redireciona //User// para o AS **/oauth2/authorize**
-        passando client_id, redirect_uri, state, response_type=**code**
+        //Client// redireciona //Attacker// para o AS **/oauth2/authorize**
+        passando client_id, redirect_uri
     end note
 
 'passo 3
-USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&state=xyz&client_id=abc
+USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&client_id=abc
 
 'passo 4
 AS --> USER: 302 Redirect
   note left of  AS #LightYellow
-        AS utiliza **redirect_uri** para retornar ao //Client//
+        AS utiliza **redirect_uri** para retornar ao //Attacker//
         tela para efetuar longin
     end note
 
 'passo 5
 USER -> AS: **POST** /login
     note right of  USER #LightYellow
-        //User// efetua login no AS com **username, password**
+        //Attacker// efetua login no AS com **username, password**
     end note
 
 'passo 6
-AS --> USER: 302 Redirect (Redirect para o //Client// **redirect_uri + code + state**)
+AS --> USER: 302 Redirect redirect_uri + <font color=red>authorization_code
 
 'passo 7
-USER -> CLIENT: **GET** redirect_uri, authorization_code, state
-
-'passo 8
-CLIENT -> AS:**POST** /oauth2/token
-    note over of  CLIENT #LightYellow
-        em posse do **authorization_code**, o //Client//
-        obtém o **acess_token**
+USER x->? : **GET** redirect_uri, <font color=red>authorization_code
+    note right of  USER #LightYellow
+        //Attacker// intercepta redirecionamento
+        para o AS e envia o //link// para a Vítima
     end note
 
+
+'passo 8
+USER -> VITIMA: **GET** redirect_uri, <font color=red>authorization_code
+
 'passo 9
-AS -> CLIENT: 200 OK **acess_token**
+VITIMA -> CLIENT: **GET** redirect_uri, <font color=red>authorization_code
 
 'passo 10
-CLIENT -> RS: **GET** /resource
+CLIENT -> AS:**POST** /oauth2/token <font color=red>authorization_code
 
 'passo 11
-RS -> CLIENT: 200 OK //protected resource//
+AS -> CLIENT: 200 OK **acess_token**
+    note left of  AS #LightYellow
+        Tudo que a Vitima fizer será feito em beneficio do //Attacker//
+    end note
+
+'passo 12
+CLIENT -> RS: **GET** /resource
+
+'passo 13
+RS -> CLIENT: 200 OK recurso protegido
 
 @enduml

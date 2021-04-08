@@ -1,6 +1,6 @@
 package com.gsf.executor.api.event;
 
-import com.gsf.executor.api.entity.ClientTemplate;
+import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.service.ManagerService;
 import com.gsf.executor.api.task.GenericTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ClientEventListener implements ApplicationListener<ClientEvent> {
 
     @Override
     public void onApplicationEvent(ClientEvent event) {
-        List<ClientTemplate> clients = event.getMessage();
+        List<UserTemplate> clients = event.getMessage();
 
         List<CompletableFuture<Object>> futuresList = new ArrayList<>();
 

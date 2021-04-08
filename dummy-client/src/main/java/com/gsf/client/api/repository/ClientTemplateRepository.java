@@ -35,6 +35,13 @@ public class ClientTemplateRepository {
 
     }
 
+    public static ClientTemplate findByAS(String as) {
+        return clients.stream()
+                .filter(c -> c.getAuthorizationServerName().equals(as))
+                .findFirst().get();
+
+    }
+
     public static ClientTemplate findById(Integer id) {
         return clients.stream()
                 .filter(c -> c.getId() == id)
@@ -44,11 +51,5 @@ public class ClientTemplateRepository {
     public static void update(ClientTemplate client) {
         clients.set(client.getId() -1, client);
 
-    }
-
-    public static ClientTemplate findByLogin(String login) {
-        return clients.stream()
-                .filter(c -> c.getLogin().equalsIgnoreCase(login))
-                .findFirst().get();
     }
 }

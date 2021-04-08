@@ -1,6 +1,6 @@
 package com.gsf.executor.api.event;
 
-import com.gsf.executor.api.entity.ClientTemplate;
+import com.gsf.executor.api.entity.UserTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class ClientEventPublisher {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishCustomEvent(final List<ClientTemplate> client) {
+    public void publishCustomEvent(final List<UserTemplate> client) {
         System.out.println("Publishing client event. ");
         ClientEvent clientEvent = new ClientEvent(this, client);
         applicationEventPublisher.publishEvent(clientEvent);

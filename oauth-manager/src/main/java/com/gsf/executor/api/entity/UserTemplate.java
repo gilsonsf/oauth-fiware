@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ClientTemplate {
+public class UserTemplate {
     int id;
     String name;
     String login;

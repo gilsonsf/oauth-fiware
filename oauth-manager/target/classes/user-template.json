@@ -19,6 +19,20 @@
     "login":"charlie-security@test.com",
     "password":"test",
     "siteUrl": "http://localhost:9001"
+  },
+  {
+    "id":4,
+    "name":"Attacker",
+    "login":"attacker@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001"
+  },
+  {
+    "id":5,
+    "name":"Mallory",
+    "login":"mallory@example.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001"
   }
 ]
 

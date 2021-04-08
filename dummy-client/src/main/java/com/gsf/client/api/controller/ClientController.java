@@ -7,11 +7,12 @@ import com.gsf.client.api.repository.ClientTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import static java.util.Objects.nonNull;
 
 @RestController
 @RequestMapping("/client")
@@ -21,8 +22,8 @@ public class ClientController {
     private AuthorizationCodeTokenService authorizationCodeTokenService;
 
     @RequestMapping(value = "/authorize", method = RequestMethod.GET)
-    public ModelAndView authorize(String login) {
-        ClientTemplate client = ClientTemplateRepository.findByLogin(login);
+    public ModelAndView authorize(String authorizationName) {
+        ClientTemplate client = ClientTemplateRepository.findByAS(authorizationName);
 
         String authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(client);
 
@@ -36,14 +37,16 @@ public class ClientController {
 
         OAuth2Token token = authorizationCodeTokenService.getToken(code, client);
 
-        System.out.println(token.getAccessToken());
-        System.out.println(token);
+        if(nonNull(token)) {
+            System.out.println(token.getAccessToken());
+            System.out.println(token);
 
-        client.setToken(token);
-        ClientTemplateRepository.update(client);
+            client.setToken(token);
+            ClientTemplateRepository.update(client);
 
-        for (int i = 0; i < 3 ; i++) {
-            authorizationCodeTokenService.getEntity(client);
+            for (int i = 0; i < 3 ; i++) {
+                authorizationCodeTokenService.getEntity(client);
+            }
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();

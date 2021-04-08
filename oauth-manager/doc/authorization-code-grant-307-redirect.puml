@@ -7,7 +7,8 @@ title Ataque **307 Redirect** no OAuth 2.0 Authorization Code Grant
 autonumber
 
 legend top
-      O ataque **307 Redirect** é...
+      No ataque **307 Redirect** o invasor obtém as credenciais do //user//
+      quando é feito login em um AS que usa 307 HTTP Redirect
 end legend
 
 actor "User \n**(Browser)**" as USER #LightBlue
@@ -28,11 +29,11 @@ USER -> CLIENT: **POST** www.site.com
 CLIENT --> USER: 302 Redirect
     note left of  CLIENT #LightYellow
         //Client// redireciona //User// para o AS **/oauth2/authorize**
-        passando client_id, redirect_uri, state, response_type=**code**
+        passando client_id, redirect_uri, response_type=**code**
     end note
 
 'passo 3
-USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&state=xyz&client_id=abc
+USER -> AS: **GET** /oauth2/authorize?response_type=code&\nredirect_uri=/callback&client_id=abc
 
 'passo 4
 AS --> USER: 302 Redirect
