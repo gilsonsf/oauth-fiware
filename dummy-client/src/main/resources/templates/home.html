@@ -11,7 +11,7 @@
 <body>
 
     <br/>
-    <div class="container">
+    <div class="container" style="width:500px">
         <div class="jumbotron">
 
             <h1>Client</h1>
@@ -23,20 +23,27 @@
 
         <div class="row">
 
-            <div class="col-md-5">
+<!--            <div class="col-md-5">-->
 
                 <form th:action="@{client/authorize}" method="get">
-                <div class="form-group">
-                    <label> <input class="form-control" size="1px" type="hidden" name="authorizationName" value="keyrock"/> </label>
-                </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" >Login with Fiware</button>
+                    <div class="form-group text-center">
+                        <label> <input class="form-control " size="1px" type="hidden" name="authorizationName" value="keyrock"/> </label>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width:80%; height:60px">Login with FIWARE</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="asVulnerable" class="btn btn-primary btn-lg btn btn-danger" style="width:80%; height:60px">Login with AS Vulnerable</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary btn-lg btn btn btn-info" style="width:80%; height:60px">Login with FIWARE Lab</button>
                     </div>
                 </form>
 
                 </p>
 
-            </div>
+<!--            </div>-->
 
         </div>
     </div>

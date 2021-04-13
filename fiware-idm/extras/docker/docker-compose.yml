@@ -29,6 +29,8 @@ services:
       # If sending eMails point to any STMP server
       #- IDM_EMAIL_HOST=mailer
       #- IDM_EMAIL_PORT=25
+      - path_to_file:/opt/fiware-idm/config.js
+
 
   mysql-db-vulnerable:
     restart: always

@@ -42,6 +42,28 @@
       "entities":"",
       "iss": null
     }
+  },
+  {
+    "id":3,
+    "clientId":"043260b7b56d43d08b87a8d7d78fa69c",
+    "secret":"052c725f4d73493bb475556f5ff863bc",
+    "responseType":"code",
+    "state":"fiwarelab_state",
+    "code":null,
+    "authorizationServerName": "fiwarelab",
+    "token": {
+      "accessToken":null,
+      "tokenType":null,
+      "expiresIn":null,
+      "refreshToken":null
+    },
+    "urls": {
+      "urlAuthorize":"https://account.lab.fiware.org/oauth2/authorize",
+      "redirectUri":"http://localhost:9001/client/callback",
+      "urlToken":"https://account.lab.fiware.org/oauth2/token",
+      "entities":"http://localhost:1027/v2/entities/",
+      "iss": null
+    }
   }
 ]
 

@@ -6,15 +6,15 @@ import org.springframework.context.ApplicationEvent;
 import java.util.List;
 
 public class ClientEvent extends ApplicationEvent {
-    private List<UserTemplate> message;
+    private ClientEventObject message;
 
-    public ClientEvent(Object source, List<UserTemplate> message) {
+    public ClientEvent(Object source, ClientEventObject message) {
         super(source);
         this.message = message;
     }
 
 
-    public List<UserTemplate> getMessage() {
+    public ClientEventObject getMessage() {
         return message;
     }
 }

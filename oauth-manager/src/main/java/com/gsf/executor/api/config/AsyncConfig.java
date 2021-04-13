@@ -17,7 +17,7 @@ public class AsyncConfig {
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("clientTaskThread-");
+        executor.setThreadNamePrefix("oauthManagerTaskThread-");
         executor.initialize();
         return executor;
     }

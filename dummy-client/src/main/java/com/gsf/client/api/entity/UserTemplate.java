@@ -1,4 +1,4 @@
-package com.gsf.executor.api.entity;
+package com.gsf.client.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;

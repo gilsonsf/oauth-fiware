@@ -30,26 +30,6 @@ public class AuthorizationCodeTokenService {
 
     private Logger logger = LoggerFactory.getLogger(AuthorizationCodeTokenService.class);
 
-    public String getAuthorizationEndpoint() {
-
-        BasicAuthentication clientAuthentication = new BasicAuthentication("cliente-app", "123456");
-
-        // recuperando os dados necessários
-        // para o endpoint de autorização
-
-        String endpointDeAutorizacao = "http://localhost:8080/oauth/authorize";
-
-        // montando a URI
-        Map<String, String> parametros = new HashMap<>();
-        parametros.put("client_id", getEncodedUrl(clientAuthentication.getLogin()));
-        parametros.put("response_type", "code");
-        parametros.put("redirect_uri", getEncodedUrl("http://localhost:9000/integracao/callback"));
-        parametros.put("scope", getEncodedUrl("read write"));
-
-        return construirUrl(endpointDeAutorizacao, parametros);
-
-    }
-
     public String getAuthorizationEndpoint(ClientTemplate client) {
 
         Map<String, String> parametros = new HashMap<>();
@@ -59,11 +39,11 @@ public class AuthorizationCodeTokenService {
         parametros.put("scope", getEncodedUrl("read write"));
         parametros.put("state", client.getState());
 
-        return construirUrl(client.getUrls().getUrlAuthorize(), parametros);
+        return buildUrl(client.getUrls().getUrlAuthorize(), parametros);
 
     }
 
-    private String construirUrl(String authorizeEndpoint, Map<String, String> parametros) {
+    private String buildUrl(String authorizeEndpoint, Map<String, String> parametros) {
         List<String> authorizationParams = new ArrayList<>(parametros.size());
 
         parametros.forEach((param, valor) -> {
@@ -82,18 +62,12 @@ public class AuthorizationCodeTokenService {
         }
     }
 
-    public String extractCode(String url) {
-       return url.split("\\?")[1]
-               .split("&")[0]
-               .split("=")[1];
-    }
-
     public OAuth2Token getToken(String authorizationCode, ClientTemplate client) {
         RestTemplate restTemplate = new RestTemplate();
         BasicAuthentication clientAuthentication = new BasicAuthentication(client.getClientId(), client.getSecret());
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(
-                getBodyKeyrock(authorizationCode, client.getUrls().getRedirectUri()),
+                getBody(authorizationCode, client.getUrls().getRedirectUri()),
                 getHeader(clientAuthentication),
                 HttpMethod.POST,
                 URI.create(client.getUrls().getUrlToken())
@@ -107,7 +81,6 @@ public class AuthorizationCodeTokenService {
             return responseEntity.getBody();
         }
 
-        // isso deve ser tratado de forma melhor (apenas para exemplo)
         throw new RuntimeException("error trying to retrieve access token");
     }
 
@@ -117,7 +90,7 @@ public class AuthorizationCodeTokenService {
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(
                 getHeader(client.getToken().getAccessToken()),
                 HttpMethod.GET,
-                URI.create("http://localhost:1027/v2/entities/")
+                URI.create(client.getUrls().getEntities())
         );
 
         try {
@@ -130,19 +103,7 @@ public class AuthorizationCodeTokenService {
         }
     }
 
-    private MultiValueMap<String, String> getBody(String authorizationCode) {
-        MultiValueMap<String, String> dadosFormulario = new LinkedMultiValueMap<>();
-
-        dadosFormulario.add("grant_type", "authorization_code");
-        dadosFormulario.add("code", authorizationCode);
-        dadosFormulario.add("scope", "read write");
-        dadosFormulario.add("redirect_uri",
-                "http://localhost:9000/integracao/callback");
-
-        return dadosFormulario;
-    }
-
-    private MultiValueMap<String, String> getBodyKeyrock(String authorizationCode, String redirectUri) {
+    private MultiValueMap<String, String> getBody(String authorizationCode, String redirectUri) {
         MultiValueMap<String, String> dadosFormulario = new LinkedMultiValueMap<>();
 
         dadosFormulario.add("grant_type", "authorization_code");
@@ -151,7 +112,6 @@ public class AuthorizationCodeTokenService {
 
         return dadosFormulario;
     }
-
 
     private HttpHeaders getHeader(BasicAuthentication clientAuthentication) {
         HttpHeaders httpHeaders = new HttpHeaders();

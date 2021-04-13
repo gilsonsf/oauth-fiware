@@ -1,9 +1,9 @@
 package com.gsf.executor.api;
 
 import com.gsf.executor.api.entity.UserTemplate;
-import com.gsf.executor.api.repository.UserTemplateRepository;
+import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.task.OAuthHonestClientTask;
-import com.gsf.executor.api.task.OAuthMixUpAttackTask;
+import com.gsf.executor.api.task.OAuthMixUpAttackTaskWebAttacker;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -186,11 +186,12 @@ class OAuthManagerTests {
 
 	@Test
 	public void testTask() {
-		UserTemplate userTemplate = UserTemplateRepository.findById(5);
+		UserTemplate userTemplate = UserTemplateMemoryRepository.findById(5);
 
 		//new OAuthCSRFAttackTask(clientTemplate);
 		//new OAuth307RedirectAttackTask(clientTemplate);
-		new OAuthHonestClientTask(userTemplate);
+//		new OAuthHonestClientTask(userTemplate);
+		new OAuthMixUpAttackTaskWebAttacker(userTemplate);
 
 		//new OAuthMixUpAttackTask(userTemplate);
 		System.out.println("testing");

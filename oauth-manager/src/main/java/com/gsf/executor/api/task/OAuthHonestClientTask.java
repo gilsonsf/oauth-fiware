@@ -17,13 +17,12 @@ public class OAuthHonestClientTask extends GenericTask {
 
         seleniumConfig.initDriver();
 
+        LOGGER.info("OAuthHonestClientTask accessClient  "+ user);
         accessClient(user);
 
         String currentUrl = seleniumConfig.getCurrentUrl();
-        LOGGER.info("Current URL 1>> " + currentUrl);
+        LOGGER.info("OAuthHonestClientTask accessAuthorisationServer  "+ currentUrl);
         accessAuthorisationServer(user, currentUrl);
-
-        LOGGER.info("Current URL 2>> " + seleniumConfig.getCurrentUrl());
 
         seleniumConfig.close();
 

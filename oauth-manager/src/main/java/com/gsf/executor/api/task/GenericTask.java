@@ -49,22 +49,44 @@ public abstract class GenericTask {
 
         LOGGER.info("Client page title >> " + seleniumConfig.getTitle());
 
+
+        if(user.getAs().equalsIgnoreCase("vulnerable")) {
+            LOGGER.info("OAuthMixUpAttackTask Add CodeInjection (AS vulnerable) "+ user);
+            addCode(user.getAs());
+            seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
+        } else {
+            LOGGER.info("OAuthMixUpAttackTaskWebAttacker Alter (AS Fiware Lab) to (AS vulnerable) "+ user);
+            addCode(user.getAs());
+            seleniumConfig.getDriver().findElement(By.id("asVulnerable")).click();
+        }
+
+    }
+
+    private void addCode(String authorizationName) {
         JavascriptExecutor jse = (JavascriptExecutor)seleniumConfig.getDriver();
         jse.executeScript("document.getElementsByName('authorizationName')[0].setAttribute('type', 'text');");
         seleniumConfig.getDriver().findElement(By.xpath("//input[@name='authorizationName']")).clear();
-        seleniumConfig.getDriver().findElement(By.xpath("//input[@name='authorizationName']")).sendKeys("vulnerable");
+        seleniumConfig.getDriver().findElement(By.xpath("//input[@name='authorizationName']")).sendKeys(authorizationName);
         jse.executeScript("document.getElementsByName('authorizationName')[0].setAttribute('type', 'hidden');");
-
-        seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
-
-        try { Thread.sleep(1000); } catch (Exception ign) {}
     }
 
     protected void accessAuthorisationServer(UserTemplate user, String currentUrl) {
 
         seleniumConfig.get(currentUrl);
         LOGGER.info("Navigate to AS page title >> " + seleniumConfig.getDriver().getTitle());
-        seleniumConfig.getDriver().findElement(By.id("id_email")).sendKeys(user.getLogin());
+
+
+        if(seleniumConfig.getDriver().getTitle().equalsIgnoreCase("Privacy error")) {
+            seleniumConfig.getDriver().findElement(By.id("details-button")).click();
+            seleniumConfig.getDriver().findElement(By.id("proceed-link")).click();
+        }
+
+        if(seleniumConfig.getDriver().getTitle().equalsIgnoreCase("FIWARE Lab Identity Manager - Login")) {
+            seleniumConfig.getDriver().findElement(By.id("id_username")).sendKeys(user.getLogin());
+        } else {
+            seleniumConfig.getDriver().findElement(By.id("id_email")).sendKeys(user.getLogin());
+        }
+
         seleniumConfig.getDriver().findElement(By.id("id_password")).sendKeys(user.getPassword());
         seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
 

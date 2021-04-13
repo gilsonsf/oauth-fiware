@@ -10,29 +10,38 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserTemplateRepository {
+import static java.util.stream.Collectors.toList;
 
-    private static List<UserTemplate> clients = null;
+public class UserTemplateMemoryRepository {
+
+    private static List<UserTemplate> users = null;
 
     static {
         Type listOfMyClassObject = new TypeToken<ArrayList<UserTemplate>>() {}.getType();
 
         try {
-            clients = new Gson().fromJson(new FileReader("src/main/resources/user-template.json"), listOfMyClassObject);
+            users = new Gson().fromJson(new FileReader("src/main/resources/user-template.json"), listOfMyClassObject);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public static List<UserTemplate> getAll() {
-        return clients;
+        return users;
     }
 
     public static UserTemplate findById(Integer id) {
-        return clients.stream()
+        return users.stream()
                 .filter(c -> c.getId() == id)
                 .findFirst().get();
 
+    }
+
+    public static List<UserTemplate> findByAuthorizationServer(String as) {
+        List<UserTemplate> collect = users.stream()
+                .filter(c -> c.getAs().equalsIgnoreCase(as))
+                .collect(toList());
+        return collect;
     }
 
 }
