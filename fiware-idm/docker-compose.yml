@@ -1,24 +1,23 @@
 version: "3.5"
 services:
   keyrock:
-    #image: fiware/idm:7.9.2
-    image: idm-security-image
-    #image: fiware/idm:7.8.1
-    container_name: fiware-keyrock-security
+    #image: fiware/idm:7.9.1-distroless
+    image: fiware/idm:7.8.1
+    container_name: fiware-keyrock
     hostname: keyrock
     networks:
-      default-security:
-        ipv4_address: 172.18.2.5
+      default:
+        ipv4_address: 172.18.1.5
     depends_on:
-      - mysql-db-security
+      - mysql-db
     ports:
-      - "3105:3105"
+      - "3005:3005"
       - "443:443"
     environment:
       - DEBUG=idm:*
-      - IDM_DB_HOST=mysql-db-security
-      - IDM_HOST=http://localhost:3105
-      - IDM_PORT=3105
+      - IDM_DB_HOST=mysql-db
+      - IDM_HOST=http://localhost:3005
+      - IDM_PORT=3005
       # Development use only 
       # Use Docker Secrets for Sensitive Data
       - IDM_DB_PASS=secret 
@@ -29,33 +28,58 @@ services:
       # If sending eMails point to any STMP server
       #- IDM_EMAIL_HOST=mailer
       #- IDM_EMAIL_PORT=25
-      - path_to_file:/opt/fiware-idm/config.js
 
-
-  mysql-db-security:
+  mysql-db:
     restart: always
     image: mysql:5.7
-    hostname: mysql-db-security
-    container_name: db-mysql-security
+    hostname: mysql-db
+    container_name: db-mysql
     expose:
       - "3307"
     ports:
       - "3307:3307"
     networks:
-      default-security:
-        ipv4_address: 172.18.2.6
+      default:
+        ipv4_address: 172.18.1.6
     environment:
       # Development use only 
       # Use Docker Secrets for Sensitive Data
       - "MYSQL_ROOT_PASSWORD=secret"
-      - "MYSQL_ROOT_HOST=172.18.2.5"
+      - "MYSQL_ROOT_HOST=172.18.1.5"
     volumes:
-      - mysql-db-security:/var/lib/mysql
-     
+      - mysql-db:/var/lib/mysql
+  
+  dummy-client:
+    build: ../dummy-client/.
+    container_name: dummy-client
+    ports:
+        - "9001:9001"
+    networks:
+      default:
+        ipv4_address: 172.18.1.7
+
+  dummy-client-https:
+    build: ../dummy-client/https/.
+    container_name: dummy-client-https
+    ports:
+        - "8443:8443"
+    networks:
+      default:
+        ipv4_address: 172.18.1.8
+  
+  tcpdump:
+     image: kaazing/tcpdump
+     container_name: tcpdump
+     network_mode: "host"
+     volumes:
+       - ./tcpdump:/tcpdump
+
 networks:
-  default-security:
+  default:
     ipam:
       config:
-        - subnet: 172.18.2.0/24
+        - subnet: 172.18.1.0/24
 volumes:
-  mysql-db-security: ~
+  mysql-db: ~
+
+

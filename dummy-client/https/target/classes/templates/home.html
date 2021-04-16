@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>
+        Dummy OAuth 2.0 Client
+    </title>
+    <link href="webjars/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" media="screen"> </link>
+</head>
+
+<body>
+
+    <br/>
+    <div class="container" style="width:500px">
+        <div class="jumbotron">
+
+            <h1>Client</h1>
+            <p>
+               A Dummy OAuth 2.0 Client
+            </p>
+
+        </div>
+
+        <div class="row">
+
+<!--            <div class="col-md-5">-->
+
+                <form th:action="@{client/authorize}" method="get">
+                    <div class="form-group text-center">
+                        <label> <input class="form-control " size="1px" type="hidden" name="authorizationName" value="keyrock"/> </label>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width:80%; height:60px">Login with FIWARE</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="asVulnerable" class="btn btn-primary btn-lg btn btn-danger" style="width:80%; height:60px">Login with AS Vulnerable</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary btn-lg btn btn btn-info" style="width:80%; height:60px">Login with FIWARE Lab</button>
+                    </div>
+                </form>
+
+                </p>
+
+<!--            </div>-->
+
+        </div>
+    </div>
+
+</body>
+
+<script src="/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</html>

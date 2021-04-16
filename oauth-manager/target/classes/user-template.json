@@ -23,20 +23,55 @@
     "siteUrl": "http://localhost:9001",
     "as": "keyrock"
   },
+
+  {
+    "id":4,
+    "name":"Alice (Dummy AS)",
+    "login":"alice-the-admin@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001",
+    "as": "dummy"
+  },
+  {
+    "id":5,
+    "name":"Bob (Dummy AS)",
+    "login":"bob-the-manager@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001",
+    "as": "dummy"
+  },
+  {
+    "id":6,
+    "name":"Charlie (Dummy AS)",
+    "login":"charlie-security@test.com",
+    "password":"test",
+    "siteUrl": "http://localhost:9001",
+    "as": "dummy"
+  },
+
+
   {
     "id":4,
     "name":"Attacker",
     "login":"attacker@test.com",
     "password":"test",
     "siteUrl": "http://localhost:9001",
-    "as": "vulnerable"
+    "as": "vulnerableXX"
   },
   {
-    "id":5,
-    "name":"Gilson",
+    "id":40,
+    "name":"Gilson (HTTP)",
     "login":"gilsonsfn@gmail.com",
     "password":"tgsist10",
     "siteUrl": "http://localhost:9001",
+    "as": "fiwarelab"
+  },
+  {
+    "id":6,
+    "name":"Gilson (HTTPS)",
+    "login":"gilsonsfn@gmail.com",
+    "password":"tgsist10",
+    "siteUrl": "https://localhost:8443",
     "as": "fiwarelab"
   }
 ]

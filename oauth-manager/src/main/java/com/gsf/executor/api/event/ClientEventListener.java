@@ -1,5 +1,6 @@
 package com.gsf.executor.api.event;
 
+import com.gsf.executor.api.AttackTypes;
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.service.ManagerService;
@@ -58,11 +59,8 @@ public class ClientEventListener implements ApplicationListener<ClientEvent> {
 
         List<CompletableFuture<Object>> futuresList = new ArrayList<>();
 
-        int idClientToBeAttacked = ThreadLocalRandom.current().nextInt(1, clients.size() + 1);
-        int idKindOfAttack = ThreadLocalRandom.current().nextInt(1, 4);
-
         clients.stream().forEach( client -> {
-            CompletableFuture<GenericTask> run = managerService.createTask(client, idClientToBeAttacked, idKindOfAttack);
+            CompletableFuture<GenericTask> run = managerService.createTask(client, AttackTypes.NONE);
             futuresList.add(CompletableFuture.anyOf(run));
         });
 
@@ -76,7 +74,7 @@ public class ClientEventListener implements ApplicationListener<ClientEvent> {
 
         CompletableFuture<List<T>> listCompletableFuture = allFuturesResult.thenApply(v ->
                 futuresList.stream().
-                        map(future -> future.join()).
+                        map(CompletableFuture::join).
                         collect(Collectors.<T>toList())
         );
 

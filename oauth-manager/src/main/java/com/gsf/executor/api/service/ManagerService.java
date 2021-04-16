@@ -1,5 +1,6 @@
 package com.gsf.executor.api.service;
 
+import com.gsf.executor.api.AttackTypes;
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.event.ClientEventObject;
 import com.gsf.executor.api.event.ClientEventPublisher;
@@ -9,7 +10,6 @@ import com.gsf.executor.api.task.OAuth307RedirectAttackTask;
 import com.gsf.executor.api.task.OAuthCSRFAttackTask;
 import com.gsf.executor.api.task.OAuthHonestClientTask;
 import com.gsf.executor.api.task.OAuthMixUpAttackTask;
-import com.gsf.executor.api.task.OAuthMixUpAttackTaskWebAttacker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,49 +19,47 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.gsf.executor.api.AttackTypes.*;
+
 @Service
 public class ManagerService {
 
-    private Logger logger = LoggerFactory.getLogger(ManagerService.class);
+    private Logger LOGGER = LoggerFactory.getLogger(ManagerService.class);
 
     @Autowired
     private ClientEventPublisher publisher;
 
     @Async
-    public CompletableFuture<GenericTask> createTask(UserTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
-        GenericTask genericTask = createGenericTask(client, idClientToBeAttacked, idKindOfAttack);
+    public CompletableFuture<GenericTask> createTask(UserTemplate client, AttackTypes attackType) {
+        LOGGER.info("attackType " + attackType);
+        GenericTask genericTask = createGenericTask(client, attackType);
 
         return CompletableFuture.completedFuture(genericTask);
     }
 
-    private GenericTask createGenericTask(UserTemplate client, int idClientToBeAttacked, int idKindOfAttack) {
+    private GenericTask createGenericTask(UserTemplate client, AttackTypes attackType) {
 
-        if(client.getAs().equalsIgnoreCase("fiwarelab")) {
-            return new OAuthMixUpAttackTaskWebAttacker(client);
+        if (attackType == NONE) {
+            return new OAuthHonestClientTask(client);
         }
 
-        GenericTask genericTask = null;
-        if(client.getId() == idClientToBeAttacked) {
+        GenericTask task = null;
 
-            switch(idKindOfAttack) {
-                case 1:
-                    genericTask = new OAuthMixUpAttackTask(client);
-                    break;
-                case 2:
-                    genericTask = new OAuth307RedirectAttackTask(client);
-                    break;
-                case 3:
-                    genericTask = new OAuthCSRFAttackTask(client);
-                    break;
-                default:
-                    genericTask = new OAuthHonestClientTask(client);
-            }
-
-        } else {
-            genericTask = new OAuthHonestClientTask(client);
+        switch (attackType) {
+            case MIXUP:
+                task = new OAuthMixUpAttackTask(client);
+                break;
+            case REDIRECT_307:
+                task = new OAuth307RedirectAttackTask(client);
+                break;
+            case CSRF:
+                task = new OAuthCSRFAttackTask(client);
+                break;
+            default:
+                task = new OAuthHonestClientTask(client);
         }
 
-       return genericTask;
+        return task;
 
     }
 
@@ -72,6 +70,10 @@ public class ManagerService {
 
         ClientEventObject eventObject = new ClientEventObject(clients, minutes);
         publisher.publishCustomEvent(eventObject);
+    }
+
+    public void testAspect() {
+        System.out.println("Teste Loggin inside");
     }
 
 }

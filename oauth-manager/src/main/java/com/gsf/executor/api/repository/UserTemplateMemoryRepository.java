@@ -44,4 +44,18 @@ public class UserTemplateMemoryRepository {
         return collect;
     }
 
+    public static UserTemplate copyValues(UserTemplate user) {
+
+        UserTemplate userCopied = new UserTemplate();
+
+        userCopied.setId(user.getId());
+        userCopied.setName(user.getName());
+        userCopied.setLogin(user.getLogin());
+        userCopied.setPassword(user.getPassword());
+        userCopied.setSiteUrl(user.getSiteUrl());
+        userCopied.setAs(user.getAs());
+
+        return userCopied;
+    }
+
 }

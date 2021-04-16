@@ -222,6 +222,25 @@ services:
       - ../mysql-data:/docker-entrypoint-initdb.d/:ro
     secrets:
       - my_secret_data
+    
+  dummy-client:
+    build: ../../dummy-client/.
+    container_name: dummy-client
+    ports:
+        - "9001:9001"
+    networks:
+      default:
+        ipv4_address: 172.18.1.13
+
+  dummy-client-https:
+    build: ../../dummy-client/https/.
+    container_name: dummy-client-https
+    ports:
+        - "8443:8443"
+    networks:
+      default:
+        ipv4_address: 172.18.1.14
+            
 networks:
   default:
     ipam:

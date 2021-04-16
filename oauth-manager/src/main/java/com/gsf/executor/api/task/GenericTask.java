@@ -9,6 +9,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
@@ -16,6 +17,7 @@ import static java.util.Objects.nonNull;
 
 @Getter
 @ToString
+@Service
 public abstract class GenericTask {
 
     protected Logger LOGGER = LoggerFactory.getLogger(GenericTask.class);
@@ -39,6 +41,13 @@ public abstract class GenericTask {
 
         LOGGER.info("Client page title >> " + seleniumConfig.getTitle());
 
+        if(seleniumConfig.getDriver().getTitle().equalsIgnoreCase("Privacy error")) {
+            seleniumConfig.getDriver().findElement(By.id("details-button")).click();
+            seleniumConfig.getDriver().findElement(By.id("proceed-link")).click();
+        }
+
+        addCode(user.getAs());
+
         seleniumConfig.getDriver().findElement(By.xpath(".//button[@type='submit']")).click();
 
     }
@@ -49,6 +58,10 @@ public abstract class GenericTask {
 
         LOGGER.info("Client page title >> " + seleniumConfig.getTitle());
 
+        if(seleniumConfig.getDriver().getTitle().equalsIgnoreCase("Privacy error")) {
+            seleniumConfig.getDriver().findElement(By.id("details-button")).click();
+            seleniumConfig.getDriver().findElement(By.id("proceed-link")).click();
+        }
 
         if(user.getAs().equalsIgnoreCase("vulnerable")) {
             LOGGER.info("OAuthMixUpAttackTask Add CodeInjection (AS vulnerable) "+ user);
@@ -72,7 +85,7 @@ public abstract class GenericTask {
 
     protected void accessAuthorisationServer(UserTemplate user, String currentUrl) {
 
-        seleniumConfig.get(currentUrl);
+        //seleniumConfig.get(currentUrl);
         LOGGER.info("Navigate to AS page title >> " + seleniumConfig.getDriver().getTitle());
 
 

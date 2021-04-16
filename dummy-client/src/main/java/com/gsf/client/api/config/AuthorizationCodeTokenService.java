@@ -42,6 +42,15 @@ public class AuthorizationCodeTokenService {
         return buildUrl(client.getUrls().getUrlAuthorize(), parametros);
 
     }
+    public String getClientCallBackEndpoint(String redirectUri, String authorizationCode, String state) {
+
+        Map<String, String> parametros = new HashMap<>();
+        parametros.put("code", authorizationCode);
+        parametros.put("state", state);
+
+        return buildUrl(redirectUri, parametros);
+
+    }
 
     private String buildUrl(String authorizeEndpoint, Map<String, String> parametros) {
         List<String> authorizationParams = new ArrayList<>(parametros.size());
