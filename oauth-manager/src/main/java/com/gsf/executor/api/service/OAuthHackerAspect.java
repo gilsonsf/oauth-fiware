@@ -23,7 +23,7 @@ public class OAuthHackerAspect {
     @Around("execution(* com.gsf.executor.api.service.ManagerService.createTask(..))")
     public void tryAttack(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        if (Utilities.isTimeToHack()) {
+        //if (Utilities.isTimeToHack()) {
             LOGGER.info("tryAttack() is running! " + LocalDateTime.now());
             LOGGER.info("hijacked method : " + joinPoint.getSignature().getName());
             //LOGGER.info("hijacked arguments : " + Arrays.toString(joinPoint.getArgs()));
@@ -31,11 +31,11 @@ public class OAuthHackerAspect {
             int randomKindOfAttack = ThreadLocalRandom.current().nextInt(1, 4);
 
             UserTemplate user = UserTemplateMemoryRepository.copyValues((UserTemplate) joinPoint.getArgs()[0]);
-            user.setName("Alice hijacked");
+            //user.setAs(user.getAs()+"_mixup");
 
             joinPoint.getArgs()[0] = user;
 
-            AttackTypes kindOfAttack = getById(randomKindOfAttack);
+            AttackTypes kindOfAttack = AttackTypes.CSRF; //  getById(randomKindOfAttack);
             joinPoint.getArgs()[1] = kindOfAttack;
 
             LOGGER.info("kindOfAttack chosen " + kindOfAttack.toString());
@@ -46,10 +46,10 @@ public class OAuthHackerAspect {
 
             LOGGER.info("Around after is running!");
 
-        } else {
-            LOGGER.info("tryAttack() (is NOT TimeToHack)! " + LocalDateTime.now());
-            joinPoint.proceed();
-        }
+//        } else {
+//            LOGGER.info("tryAttack() (is NOT TimeToHack)! " + LocalDateTime.now());
+//            joinPoint.proceed();
+//        }
     }
 
     public AttackTypes getById(int id) {

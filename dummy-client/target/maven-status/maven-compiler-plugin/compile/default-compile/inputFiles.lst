@@ -1,13 +1,12 @@
-C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\controller\AuthorizationServerController.java
+C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\controller\PageController.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\ClientApplication.java
+C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\BasicAuthentication.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\controller\ClientController.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\entity\TemplateUrls.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\entity\OAuth2Token.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\repository\TemplateMemoryRepository.java
+C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\DisableSSLConfiguration.java
+C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\entity\ClientTemplate.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\entity\UserTemplate.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\AuthorizationCodeTokenService.java
 C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\SecurityConfig.java
-C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\controller\PageController.java
-C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\BasicAuthentication.java
-C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\config\DisableSSLConfiguration.java
-C:\dev\docker\oauth-fiware\dummy-client\src\main\java\com\gsf\client\api\entity\ClientTemplate.java

@@ -1,5 +1,4 @@
 com\gsf\client\api\entity\UserTemplate.class
-com\gsf\client\api\repository\TemplateMemoryRepository$2.class
 com\gsf\client\api\entity\ClientTemplate.class
 com\gsf\client\api\config\BasicAuthentication.class
 com\gsf\client\api\config\SecurityConfig.class
@@ -8,7 +7,6 @@ com\gsf\client\api\config\DisableSSLConfiguration$2.class
 com\gsf\client\api\repository\TemplateMemoryRepository$1.class
 com\gsf\client\api\repository\TemplateMemoryRepository.class
 com\gsf\client\ClientApplication.class
-com\gsf\client\api\controller\AuthorizationServerController.class
 com\gsf\client\api\controller\ClientController.class
 com\gsf\client\api\controller\PageController.class
 com\gsf\client\api\config\DisableSSLConfiguration.class

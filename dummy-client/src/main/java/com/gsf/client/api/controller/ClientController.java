@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/client")
 public class ClientController {
@@ -25,43 +27,71 @@ public class ClientController {
 
     private ClientTemplate loggedClient;
 
+    private String asName;
+
     @RequestMapping(value = "/authorize", method = RequestMethod.GET)
-    public ModelAndView authorize(String authorizationName) {
+    public ModelAndView authorize(String authorizationName) throws CloneNotSupportedException {
 
-        this.loggedClient = TemplateMemoryRepository.copyValues(TemplateMemoryRepository.findByAS(authorizationName));
+        this.asName = authorizationName;
+        String authorizationEndpoint = null;
+        String[] as = this.asName.split("_");
 
-        String authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(this.loggedClient);
+        if(as.length == 2) {
+            //attacker scenario
+
+            //passo 2
+//            ClientTemplate honest = TemplateMemoryRepository.copyValues(TemplateMemoryRepository.findByAS(as[0]));
+//            this.loggedClient = TemplateMemoryRepository.copyValues(TemplateMemoryRepository.findByAS(as[1])); //this is attacker
+
+            ClientTemplate honest = TemplateMemoryRepository.findByAS(as[0]).clone();
+            this.loggedClient = TemplateMemoryRepository.findByAS(as[1]).clone(); //this is attacker
+
+            honest.getUrls().setUrlAuthorize(this.loggedClient.getUrls().getUrlAuthorize());
+            honest.setState(this.loggedClient.getState());
+
+            authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(honest);
+
+        } else {
+            //honest
+            this.loggedClient = TemplateMemoryRepository.findByAS(as[0]).clone();
+            authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(this.loggedClient);
+
+        }
 
         return new ModelAndView("redirect:" + authorizationEndpoint);
-
-
-//        if(authorizationName.equalsIgnoreCase("fiwarelab")) {
-//            client = TemplateMemoryRepository.findByAS("vulnerable-https");
-//
-//            ClientTemplate clientAttacker = new ClientTemplate();
-//
-//            clientAttacker.setClientId(client.getClientId());
-//            clientAttacker.setState("fiwarelab_state");
-//
-//            TemplateUrls urls = new TemplateUrls();
-//            urls.setUrlAuthorize(client.getUrls().getUrlAuthorize());
-//            urls.setRedirectUri(client.getUrls().getRedirectUri());
-//            clientAttacker.setUrls(urls);
-//
-//            clientAttacker.setResponseType(client.getResponseType());
-//
-//            authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(clientAttacker);
-//
-//        } else {
 
     }
 
     @RequestMapping(value = "/callback", method = RequestMethod.GET)
-    public ResponseEntity callback(String code, String state) {
+    public ResponseEntity callback(String code, String state) throws CloneNotSupportedException {
 
-        OAuth2Token token = authorizationCodeTokenService.getToken(code, this.loggedClient);
-        this.loggedClient.setToken(token);
-        LOGGER.info("Client with Access Token: " + this.loggedClient);
+
+        if("".equalsIgnoreCase(state)) {
+            LOGGER.info("Client was attacked by CSRF  : " + code);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+
+        String[] as = this.asName.split("_");
+
+        if (as.length == 2) {
+            ClientTemplate honest = TemplateMemoryRepository.findByAS(as[0]).clone();
+            this.loggedClient.setClientId(honest.getClientId());
+            this.loggedClient.setSecret(honest.getSecret());
+        }
+
+        OAuth2Token token = null;
+        if("fiwarelab".equalsIgnoreCase(loggedClient.getAuthorizationServerName())) {
+            //provisorio
+            token = TemplateMemoryRepository.createTokenFiwareLabTemporary(code);
+
+        } else {
+            token = authorizationCodeTokenService.getToken(code, this.loggedClient);
+        }
+
+        if (Objects.nonNull(token)) {
+            this.loggedClient.setToken(token);
+            LOGGER.info("Client with Access Token: " + this.loggedClient);
+        }
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

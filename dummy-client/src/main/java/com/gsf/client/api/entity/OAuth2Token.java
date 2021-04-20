@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-public class OAuth2Token {
+public class OAuth2Token implements Cloneable {
     @Getter
     @Setter
     @JsonProperty("access_token")
@@ -26,4 +26,9 @@ public class OAuth2Token {
     @Setter
     @JsonProperty("refresh_token")
     private String refreshToken;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

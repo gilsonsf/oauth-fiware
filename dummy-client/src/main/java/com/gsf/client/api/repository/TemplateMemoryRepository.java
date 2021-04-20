@@ -90,6 +90,15 @@ public class TemplateMemoryRepository {
 
         return token;
     }
+    public static OAuth2Token createTokenFiwareLabTemporary(String authorizationCode) {
+        OAuth2Token token = new OAuth2Token();
+        token.setAccessToken(authorizationCode+"_fiwarelab-access-token");
+        token.setExpiresIn("3600");
+        token.setRefreshToken(authorizationCode+"_fiwarelab-refresh-token");
+        token.setTokenType("Bearer");
+
+        return token;
+    }
 
     public static void setClientLogged(String clientId) {
 

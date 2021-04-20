@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Accordion Example</h2>
+    <p><strong>Note:</strong> The <strong>data-parent</strong> attribute makes sure that all collapsible elements under the specified parent will be closed when one of the collapsible item is shown.</p>
+    <div class="panel-group" id="accordion">
+
+
+        <div class="panel panel-default" th:each="entry, stat : ${captured}">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" th:href="'#accordion' + ${entry.key}">Teste  <td th:text="${entry.key}"></td></a>
+                </h4>
+            </div>
+            <div th:id="'accordion' + ${entry.key}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <textarea  th:text="${entry.value}" class="form-control" rows="18" cols="20" disabled>
+
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -11,4 +11,9 @@ public class PageController {
         return "home";
     }
 
+    @GetMapping("/csrf")
+    public String csrf() {
+        return "csrf";
+    }
+
 }

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gsf</groupId>
-	<artifactId>dummy-client</artifactId>
+	<artifactId>dummy-authorization-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dummy-client</name>
+	<name>dummy-authorization-server</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

@@ -2,6 +2,7 @@ package com.gsf.client.api.config;
 
 import com.gsf.client.api.entity.ClientTemplate;
 import com.gsf.client.api.entity.OAuth2Token;
+import com.gsf.client.api.repository.TemplateMemoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -15,6 +16,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

@@ -58,14 +58,23 @@ services:
       default:
         ipv4_address: 172.18.1.7
 
-  dummy-client-https:
-    build: ../dummy-client/https/.
-    container_name: dummy-client-https
+  dummy-authorization-server:
+    build: ../dummy-authorization-server/.
+    container_name: dummy-authorization-server
     ports:
-        - "8443:8443"
+        - "8080:8080"
     networks:
       default:
         ipv4_address: 172.18.1.8
+
+  #dummy-client-https:
+  #  build: ../dummy-client/https/.
+  #  container_name: dummy-client-https
+  #  ports:
+  #      - "8443:8443"
+  #  networks:
+  #    default:
+  #      ipv4_address: 172.18.1.8
   
   tcpdump:
      image: kaazing/tcpdump

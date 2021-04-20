@@ -21,7 +21,7 @@ public class OAuth307RedirectAttackTask extends GenericTask {
         String currentUrl = createAttackRequest(seleniumConfig.getCurrentUrl());
         accessAuthorisationServer(user, currentUrl);
 
-        getErrors();
+        //hasErrors();
 
         seleniumConfig.close();
 

@@ -13,4 +13,4 @@ VOLUME /tmp
 
 CMD ["java", "-jar", "/app.jar", "--spring.profiles.active=container"]
 
-EXPOSE 9001
+EXPOSE 8080

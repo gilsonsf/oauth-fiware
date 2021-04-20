@@ -38,6 +38,11 @@ public class AuthorizationServerController {
                                   String redirect_uri, String state, String client_id, HttpServletRequest request) {
 
         System.out.println(email + " " + password);
+        System.out.println("state >>" + state);
+
+        if (state == null) {
+            state = "";
+        }
 
         String authorizationCode = "ASDummy_" + UUID.randomUUID().toString();
         this.loggedClientAS = TemplateMemoryRepository.getLoggedClient();
@@ -67,6 +72,26 @@ public class AuthorizationServerController {
         LOGGER.info("AS Dummy responding to: " + client);
 
         return new ResponseEntity<>(token, HttpStatus.OK);
+
+    }
+
+    @PostMapping(value = "/mixup/oauth2/token")
+    public ResponseEntity mixupToken(@RequestHeader("Authorization") String authorization,
+                                             @RequestBody String body) {
+
+        String authorizationCode = body
+                .split("&")[1]
+                .split("=")[1];
+
+        String credentials = new String(
+                Base64.getDecoder()
+                        .decode(authorization.split(" ")[1].getBytes()));
+
+        ClientTemplate client = TemplateMemoryRepository.findByClientId(credentials.split(":")[0]);
+
+        LOGGER.info("Client was attacked by Mix Up : " + client);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
 
     }
 

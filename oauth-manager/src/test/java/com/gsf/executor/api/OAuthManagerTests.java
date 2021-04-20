@@ -201,11 +201,11 @@ class OAuthManagerTests {
 
     @Test
     public void testTask() {
-        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(1);
+        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(4);
 
         //new OAuthCSRFAttackTask(clientTemplate);
         //new OAuth307RedirectAttackTask(clientTemplate);
-        //new OAuthHonestClientTask(userTemplate);
+        new OAuthHonestClientTask(userTemplate);
         //new OAuthMixUpAttackTaskWebAttacker(userTemplate);
 
         //new OAuthMixUpAttackTask(userTemplate);
@@ -217,20 +217,22 @@ class OAuthManagerTests {
 //			}
 //		});
 
-        List<CompletableFuture<Object>> futuresList = new ArrayList<>();
+//        List<CompletableFuture<Object>> futuresList = new ArrayList<>();
+//
+//        UserTemplateMemoryRepository.getAll().forEach(u -> {
+//            if (u.getAs().equalsIgnoreCase("dummy")
+//                    || u.getAs().equalsIgnoreCase("keyrock")) {
+//
+//                CompletableFuture<GenericTask> run = service.createTask(u, AttackTypes.NONE);
+//                run.join();
+//               // futuresList.add(CompletableFuture.anyOf(run));
+//            }
+//        });
+//
+//        allOf(futuresList);
 
-        UserTemplateMemoryRepository.getAll().forEach(u -> {
-            if (u.getAs().equalsIgnoreCase("dummy")
-                    || u.getAs().equalsIgnoreCase("keyrock")) {
-
-                CompletableFuture<GenericTask> run = service.createTask(u, AttackTypes.NONE);
-                run.join();
-               // futuresList.add(CompletableFuture.anyOf(run));
-            }
-        });
-
-        //allOf(futuresList);
-        //task.join();
+//        CompletableFuture<GenericTask> task = service.createTask(userTemplate, AttackTypes.NONE);
+//        task.join();
 
         System.out.println("testing");
 

@@ -85,7 +85,7 @@ public abstract class GenericTask {
 
     protected void accessAuthorisationServer(UserTemplate user, String currentUrl) {
 
-        //seleniumConfig.get(currentUrl);
+
         LOGGER.info("Navigate to AS page title >> " + seleniumConfig.getDriver().getTitle());
 
 
@@ -98,6 +98,17 @@ public abstract class GenericTask {
             seleniumConfig.getDriver().findElement(By.id("id_username")).sendKeys(user.getLogin());
         } else {
             seleniumConfig.getDriver().findElement(By.id("id_email")).sendKeys(user.getLogin());
+        }
+
+        if (seleniumConfig.getDriver().getTitle().equalsIgnoreCase("Identity Manager Dummy")) {
+
+            String state = extractValue(currentUrl, "state");
+
+            JavascriptExecutor jse = (JavascriptExecutor)seleniumConfig.getDriver();
+            jse.executeScript("document.getElementsByName('state')[0].setAttribute('type', 'text');");
+            seleniumConfig.getDriver().findElement(By.xpath("//input[@name='state']")).clear();
+            seleniumConfig.getDriver().findElement(By.xpath("//input[@name='state']")).sendKeys(state);
+            jse.executeScript("document.getElementsByName('state')[0].setAttribute('type', 'hidden');");
         }
 
         seleniumConfig.getDriver().findElement(By.id("id_password")).sendKeys(user.getPassword());
@@ -113,14 +124,18 @@ public abstract class GenericTask {
         }
     }
 
-    protected void getErrors() {
-        //String error = seleniumConfig.getDriver().findElement(By.className("error-oauth")).getText();
-        //
-          //identify element and set value
-//        jsExecutor.executeScript ("document.getElementsByName('authorizationName').value='vulnerable';");
-//        String s = (String) jsExecutor.executeScript("return document.getElementsByName('authorizationName').value");
-
-        LOGGER.info("Error >> " + "Missing parameter: `state`");
+    protected boolean hasErrors() {
+        try {
+            WebElement error = seleniumConfig.getDriver().findElement(By.className("error"));
+            if (nonNull(error)) {
+                LOGGER.info(error.getText());
+                LOGGER.info(seleniumConfig.getDriver().findElement(By.className("error-oauth")).getText());
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("Sem errors");
+        }
+        return false;
     }
 
     protected String createAttackRequest(String url) {
@@ -134,15 +149,16 @@ public abstract class GenericTask {
                 .reduce((a, b) -> a + "&" + b).get();
 
     }
-    protected String extractCode(String url) {
-        return url.split("\\?")[1]
-                .split("&")[0]
-                .split("=")[1];
-    }
+    protected String extractValue(String url, String value) {
 
-    protected String extractState(String url) {
-        return url.split("\\?")[1]
-                .split("&")[3]
-                .split("=")[1];
+        // http://localhost:9001/client/callback?state=mixup_state&code=xDCZomRRjvcE6dBbRURd3QAXHcfKLV
+        String[] values = url.split("\\?")[1].split("&");
+        for (String v: values) {
+            if (v.startsWith(value)) {
+                return v.split("=")[1];
+            }
+        }
+
+        return "";
     }
 }

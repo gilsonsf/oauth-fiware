@@ -51,12 +51,12 @@
 
 
   {
-    "id":4,
+    "id":50,
     "name":"Attacker",
     "login":"attacker@test.com",
     "password":"test",
     "siteUrl": "http://localhost:9001",
-    "as": "vulnerableXX"
+    "as": ""
   },
   {
     "id":40,

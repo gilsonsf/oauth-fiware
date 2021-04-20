@@ -1,7 +1,6 @@
 package com.gsf.executor.api.task;
 
 import com.gsf.executor.api.entity.UserTemplate;
-import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 
 public class OAuthMixUpAttackTaskWebAttacker extends GenericTask {
 
@@ -25,7 +24,7 @@ public class OAuthMixUpAttackTaskWebAttacker extends GenericTask {
 
         //passo 10 (extrair code da url) e chama e inicia um fluxo novo com um state(new)
         String currentUrl = seleniumConfig.getCurrentUrl();
-        String code = extractCode(currentUrl);
+        String code = extractValue(currentUrl, "code");
         LOGGER.info("OAuthMixUpAttackTaskWebAttacker extract code from URL  "+ currentUrl);
 
         seleniumConfig.close();
