@@ -30,11 +30,17 @@ public class ManagerService {
     private ClientEventPublisher publisher;
 
     @Async
-    public CompletableFuture<GenericTask> createTask(UserTemplate client, AttackTypes attackType) {
+    public CompletableFuture<GenericTask> createTask(UserTemplate user, AttackTypes attackType) {
         LOGGER.info("attackType " + attackType);
-        GenericTask genericTask = createGenericTask(client, attackType);
+        GenericTask genericTask = createGenericTask(user, attackType);
 
         return CompletableFuture.completedFuture(genericTask);
+    }
+
+    public void createTaskSync(UserTemplate user, AttackTypes attackType) {
+        LOGGER.info("attackType " + attackType);
+        createGenericTask(user, attackType);
+
     }
 
     private GenericTask createGenericTask(UserTemplate client, AttackTypes attackType) {

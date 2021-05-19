@@ -35,7 +35,7 @@ public class OAuthHackerAspect {
 
             joinPoint.getArgs()[0] = user;
 
-            AttackTypes kindOfAttack = AttackTypes.CSRF; //  getById(randomKindOfAttack);
+            AttackTypes kindOfAttack = AttackTypes.CSRF;  //Utilities.getAttackTypesById(randomKindOfAttack);
             joinPoint.getArgs()[1] = kindOfAttack;
 
             LOGGER.info("kindOfAttack chosen " + kindOfAttack.toString());
@@ -52,11 +52,5 @@ public class OAuthHackerAspect {
 //        }
     }
 
-    public AttackTypes getById(int id) {
-        for (AttackTypes type : AttackTypes.values()) {
-            if (type.getId() == id) return type;
-        }
-        return AttackTypes.NONE;
-    }
 
 }

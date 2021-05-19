@@ -7,11 +7,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserTemplate {
+public class UserTemplate implements Cloneable {
     int id;
     String name;
     String login;
     String password;
     String siteUrl;
     String as;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

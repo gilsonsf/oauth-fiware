@@ -16,7 +16,7 @@
     "urls": {
       "urlAuthorize":"http://localhost:3005/oauth2/authorize",
       "redirectUri":"http://localhost:9001/client/callback",
-      "urlToken":"http://localhost:3005/oauth2/token",
+      "urlToken":"http://172.18.1.5:3005/oauth2/token",
       "entities":"http://localhost:1027/v2/entities/",
       "iss": null
     }

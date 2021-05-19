@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>All Executions</h2>
+    <table  class="table table-hover">
+        <thead>
+        <tr>
+            <th> Id </th>
+            <th> Type </th>
+            <th> Time/Hour </th>
+            <th> User </th>
+            <th> AS </th>
+            <th> View </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${capturedList.empty}">
+            <td colspan="2"> No Executions Available </td>
+        </tr>
+        <tr th:each="captured : ${capturedList}">
+            <td><span th:text="${captured.id}"> Id </span></td>
+            <td><span th:text="${captured.type}"> Type </span></td>
+            <td><span th:text="${captured.captureDate}"> Time/Hour </span></td>
+            <td><span th:text="${captured.user.name}"> User </span></td>
+            <td><span th:text="${captured.user.as}"> AS </span></td>
+            <td><a  th:href="'/view?templateId=' + ${captured.id}">View</a></td>
+
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

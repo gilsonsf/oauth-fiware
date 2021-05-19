@@ -10,6 +10,7 @@
 
 <div class="container">
     <h2>Execution</h2>
+    <h2>See execution</h2>
     <p><strong>Execution:</strong> Client  <strong  th:text="${user.name}" ></strong> access Authorization Server <strong  th:text="${user.as}" ></strong></p>
     <div class="panel-group" id="accordion">
 
@@ -17,7 +18,7 @@
         <div class="panel panel-default" th:each="captured : ${captured}">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" th:href="'#accordion' + ${captured.id}"><td th:text="${captured.title}"></td></a>
+                    <a data-toggle="collapse" data-parent="#accordion" th:href="'#accordion' + ${captured.id}">Teste  <td th:text="${captured.title}"></td></a>
                 </h4>
             </div>
             <div th:id="'accordion' + ${captured.id}" class="panel-collapse collapse">

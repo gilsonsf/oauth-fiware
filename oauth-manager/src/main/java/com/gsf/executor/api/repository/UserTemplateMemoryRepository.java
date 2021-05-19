@@ -2,6 +2,7 @@ package com.gsf.executor.api.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.gsf.executor.api.entity.CaptureTemplate;
 import com.gsf.executor.api.entity.UserTemplate;
 
 import java.io.FileNotFoundException;
@@ -33,6 +34,13 @@ public class UserTemplateMemoryRepository {
     public static UserTemplate findById(Integer id) {
         return users.stream()
                 .filter(c -> c.getId() == id)
+                .findFirst().get();
+
+    }
+
+    public static UserTemplate findByNameAndAS(String name, String as) {
+        return users.stream()
+                .filter(c -> (c.getName().equalsIgnoreCase(name) && c.getAs().equalsIgnoreCase(as)))
                 .findFirst().get();
 
     }
