@@ -1,0 +1,136 @@
+<html>
+	<head>
+	    <title>Analysis Traffic</title>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	    <script src="/sockjs-0.3.4.js"></script>
+	    <script src="/stomp.js"></script>
+
+	    <script type="text/javascript">
+
+	        var stompClient = null;
+
+	        function setConnected(connected) {
+
+	            document.getElementById('connect').disabled = connected;
+	            document.getElementById('disconnect').disabled = !connected;
+	            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+	            document.getElementById('response').innerHTML = '';
+	        }
+
+	        function connect() {
+
+	            var socket = new SockJS('/chatwithbots');
+	            stompClient = Stomp.over(socket);
+
+	            stompClient.connect({}, function(frame) {
+
+	            	setConnected(true);
+	                console.log('Connected: ' + frame);
+	                stompClient.subscribe('/topic/pushmessages', function(messageOutput) {
+
+	                    showMessageOutput(JSON.parse(messageOutput.body));
+	                });
+	            });
+	        }
+
+	        function disconnect() {
+
+	            if(stompClient != null) {
+	                stompClient.disconnect();
+	            }
+
+	            setConnected(false);
+	            console.log("Disconnected");
+	        }
+
+	        function sendMessage() {
+
+	        	var from = document.getElementById('from').value;
+	            var text = document.getElementById('text').value;
+	            stompClient.send("/app/chatwithbots", {}, JSON.stringify({'from':from, 'text':text}));
+	        }
+
+
+	        function showMessageOutput(messageOutput) {
+
+				if (messageOutput.id == null || messageOutput.id == 0) {
+					 console.log("MessageOutput is empty");
+					 return;
+				}
+
+	            var response = document.getElementById('response');
+
+	            messageOutput.id;
+
+				messageOutput.captureDate;
+				messageOutput.user;
+				messageOutput.captureList;
+
+				var list =  messageOutput.captureList;
+				for (position in list) {
+					var pHeader = document.createElement('p');
+					pHeader.style.wordWrap = 'break-word';
+					pHeader.appendChild(document.createTextNode(list[position].title));
+					pHeader.style.fontWeight = 'bold';
+
+					var p = document.createElement('p');
+					p.style.wordWrap = 'break-word';
+					p.appendChild(document.createTextNode(list[position].value + "  "));
+
+					 if (list[position].title == 'HTTP/1.1 307') {
+
+						 var link = document.createElement("a");
+						 link.setAttribute("href", "https://tools.ietf.org/id/draft-ietf-oauth-security-topics-08.html#rfc.section.3.9");
+						 link.setAttribute("target", "_blank");
+						 link.classList.add("label");
+
+						 //link.classList.add("label-warning"); //yellow
+						 link.classList.add("label-info"); //light green
+						 //link.classList.add("label-danger"); //red
+
+						 link.appendChild(document.createTextNode("307 Redirect Vulnerability"));
+
+						 p.appendChild(link);
+
+						// p.appendChild(document.createTextNode(list[position].value + "  mais texto "));
+
+					 }
+
+					response.appendChild(pHeader);
+					response.appendChild(p);
+				}
+
+
+	        }
+
+	    </script>
+	    
+	</head>
+	
+	<body onload="disconnect()">
+
+		<div>
+		
+		
+			<div>
+				<input type="text" id="from" placeholder="Choose a nickname"/>
+			</div>
+			<br />
+		    <div>
+		        <button id="connect" onclick="connect();">Connect</button>
+		        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+		    </div>
+		    <br />
+		    <div id="conversationDiv">
+		        <input type="text" id="text" placeholder="Write a message..."/>
+		        <button id="sendMessage" onclick="sendMessage();">Send</button>
+		        <p id="response"></p>
+		    </div>
+		</div>
+
+	</body>
+</html>

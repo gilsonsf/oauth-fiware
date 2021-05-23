@@ -1,6 +1,6 @@
 package com.gsf.executor.api.util;
 
-import com.gsf.executor.api.AttackTypes;
+import com.gsf.executor.api.enums.AttackTypes;
 
 import java.time.LocalDateTime;
 

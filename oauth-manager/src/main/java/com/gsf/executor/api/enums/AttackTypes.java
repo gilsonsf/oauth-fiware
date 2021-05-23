@@ -1,4 +1,4 @@
-package com.gsf.executor.api;
+package com.gsf.executor.api.enums;
 
 public enum AttackTypes {
 

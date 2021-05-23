@@ -1,6 +1,6 @@
 package com.gsf.executor.api.controller;
 
-import com.gsf.executor.api.AttackTypes;
+import com.gsf.executor.api.enums.AttackTypes;
 import com.gsf.executor.api.entity.CaptureTemplate;
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.CaptureTemplateMemoryRepository;
@@ -27,6 +27,11 @@ public class PainelController {
     @GetMapping("/")
     public String home() {
         return "home";
+    }
+
+    @GetMapping("/analysis")
+    public String analysis() {
+        return "analysis";
     }
 
     @GetMapping("/view")

@@ -1,8 +1,7 @@
 package com.gsf.executor.api.event;
 
-import com.gsf.executor.api.AttackTypes;
+import com.gsf.executor.api.enums.AttackTypes;
 import com.gsf.executor.api.entity.UserTemplate;
-import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.service.ManagerService;
 import com.gsf.executor.api.task.GenericTask;
 import org.slf4j.Logger;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Component
