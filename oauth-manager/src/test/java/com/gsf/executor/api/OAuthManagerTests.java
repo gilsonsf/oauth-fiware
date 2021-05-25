@@ -203,12 +203,12 @@ class OAuthManagerTests {
     public void testTask() {
         UserTemplate userTemplate = UserTemplateMemoryRepository.findById(76);
 
-        //userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
+        userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
 
         //new OAuthCSRFAttackTask(clientTemplate);
         //new OAuth307RedirectAttackTask(clientTemplate);
-        new OAuthHonestClientTask(userTemplate);
-        //new OAuthMixUpAttackTaskWebAttacker(userTemplate);
+        //new OAuthHonestClientTask(userTemplate);
+        new OAuthMixUpAttackTaskWebAttacker(userTemplate);
 
         //new OAuthMixUpAttackTask(userTemplate);
 

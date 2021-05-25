@@ -28,7 +28,7 @@ public class OAuthMixUpAttackTaskWebAttacker extends GenericTask {
         LOGGER.info("OAuthMixUpAttackTaskWebAttacker extract code from URL  "+ currentUrl);
 
         seleniumConfig.close();
-        seleniumConfig.initDriver();
+        //seleniumConfig.initDriver();
 
         LOGGER.info("OAuthMixUpAttackTaskWebAttacker End  "+ user);
     }

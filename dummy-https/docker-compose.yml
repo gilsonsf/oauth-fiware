@@ -1,0 +1,25 @@
+version: "3.5"
+services:
+  dummy-https:
+    build: .
+    container_name: dummy-https
+    ports:
+        - "8443:8443"
+    networks:
+      default:
+        ipv4_address: 172.18.2.9
+  
+  tcpdump:
+     image: kaazing/tcpdump
+     container_name: tcpdump
+     network_mode: "host"
+     volumes:
+       - ./tcpdump:/tcpdump
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.18.2.0/24
+
+
