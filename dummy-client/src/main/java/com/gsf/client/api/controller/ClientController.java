@@ -83,12 +83,13 @@ public class ClientController {
         if("fiwarelab".equalsIgnoreCase(loggedClient.getAuthorizationServerName())) {
             //provisorio
             token = TemplateMemoryRepository.createTokenFiwareLabTemporary(code);
+            //token = authorizationCodeTokenService.getToken(code, this.loggedClient);
 
         } else {
             token = authorizationCodeTokenService.getToken(code, this.loggedClient);
         }
 
-        if (Objects.nonNull(token)) {
+        if (Objects.nonNull(token) && !"".equalsIgnoreCase(token.getAccessToken())) {
             this.loggedClient.setToken(token);
             LOGGER.info("Client with Access Token: " + this.loggedClient);
         }

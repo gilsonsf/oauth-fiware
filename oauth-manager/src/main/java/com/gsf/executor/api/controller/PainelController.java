@@ -72,19 +72,16 @@ public class PainelController {
 
         UserTemplate userSelected = UserTemplateMemoryRepository.findByNameAndAS(userName, asId);
 
-        //captureService.prepareFile();
-
-
         managerService.createTaskSync(userSelected, flowType);
 
         try {
-            //espera 15 segundo para o gravar o arquivo
-            Thread.sleep(5000L);
+            //espera 30 segundo para o gravar o arquivo
+            Thread.sleep(20000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        CaptureTemplate captureTemplate = captureService.execute(userSelected, flowType.name());
+        CaptureTemplate captureTemplate = captureService.execute(userSelected, "sync");
 
         CaptureTemplateMemoryRepository.addCaptureTemplate(captureTemplate);
 
@@ -92,6 +89,18 @@ public class PainelController {
         model.addAttribute("user", captureTemplate.getUser());
 
         return "view";
+    }
+
+    @GetMapping(value = "/executionAsync")
+    public String executionAsync(String minutes) {
+
+        if(managerService.hasExecution()) {
+            return "anymessage";
+        } else {
+            managerService.startProcess(Integer.parseInt(minutes));
+            return "analysis";
+        }
+
     }
 
 }

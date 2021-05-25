@@ -151,7 +151,6 @@ public abstract class GenericTask {
     }
     protected String extractValue(String url, String value) {
 
-        // http://localhost:9001/client/callback?state=mixup_state&code=xDCZomRRjvcE6dBbRURd3QAXHcfKLV
         String[] values = url.split("\\?")[1].split("&");
         for (String v: values) {
             if (v.startsWith(value)) {

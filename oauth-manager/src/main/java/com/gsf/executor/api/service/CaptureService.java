@@ -4,6 +4,7 @@ import com.gsf.executor.api.entity.CaptureTemplate;
 import com.gsf.executor.api.entity.Captured;
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.CaptureTemplateMemoryRepository;
+import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import io.pkts.PacketHandler;
 import io.pkts.Pcap;
 import io.pkts.buffer.Buffer;
@@ -31,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CaptureService {
 
-    private  List<String> validation = Arrays.asList("GET / HTTP/1.1",
+    private List<String> validation = Arrays.asList("GET / HTTP/1.1",
             "GET /client/authorize",
             "HTTP/1.1 302",
             "GET /authorize?",
@@ -39,10 +40,12 @@ public class CaptureService {
             "POST /oauth2/authorize", //keyrock
             "HTTP/1.1 307",
             "GET /client/callback",
+            "GET /csrf HTTP/1.1",
             "POST /oauth2/token HTTP/1.1", //keyrock
-            "POST /authorizationServer/oauth2/token HTTP/1.1");
+            "POST /authorizationServer/oauth2/token HTTP/1.1",
+            "POST /authorizationServer/mixup/oauth2/token HTTP/1.1");
 
-    private  List<String> validationVSRFFlow = Arrays.asList("GET / HTTP/1.1",
+    private List<String> validationVSRFFlow = Arrays.asList("GET / HTTP/1.1",
             "GET /client/authorize",
             "HTTP/1.1 302",
             "GET /authorize?",
@@ -51,44 +54,119 @@ public class CaptureService {
             "GET /client/callback",
             "POST /authorizationServer/oauth2/token HTTP/1.1");
 
+    //
 
-    public CaptureTemplate execute(UserTemplate user, String flowType) {
+    public static void main(String[] args) {
+        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(1);
+        new CaptureService().execute(userTemplate, "async");
+    }
+
+    public CaptureTemplate execute(UserTemplate user, String type) {
 
         CaptureTemplate capture = new CaptureTemplate();
 
-        List<CaptureTemplate> capturedList = CaptureTemplateMemoryRepository.getAllCaptureTemplate();
+        List<CaptureTemplate> capturedList;
+
+        if ("sync".equalsIgnoreCase(type)) {
+            capturedList = CaptureTemplateMemoryRepository.getAllCaptureTemplate();
+        } else {
+            capturedList = CaptureTemplateMemoryRepository.getAllCaptureTemplateASYNC();
+        }
 
         capture.setId(capturedList.size() + 1);
-        capture.setType(flowType);
+        capture.setType(type);
         capture.setInitFile(capturedList.size() > 0 ? capturedList.get(capturedList.size() - 1).getEndFile() : 0);
         capture.setCaptureDate(LocalDateTime.now());
         capture.setUser(user);
 
-        CaptureTemplateMemoryRepository.allPcapFiles.add("init id:"+capture.getId());
-
-        try {
-
-            Pcap pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump.pcap");
-
-            execute(capture, pcap);
-
-            pcap.close();
-            pcap = null;
-
-            //get Capture for specif ID and remove duplicates
-            List<String> listBySpecificID = getCapturedById(capture.getId());
-            listBySpecificID = removeDuplicates(listBySpecificID);
-
-            //add at CaptureTemplate capture
-            add(capture, listBySpecificID);
+        CaptureTemplateMemoryRepository.allPcapFiles.add(type+"_init_id_" + capture.getId());
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int attempt = 1;
+        Pcap pcap = null;
+        do {
+            try {
+               // Thread.sleep(5000L);
+                //pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump.pcap");
+                pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\oauth-manager\\src\\main\\resources\\tcpdump22.pcap");
+
+                execute(capture, pcap, type);
+
+                pcap.close();
+                pcap = null;
+
+                //get Capture for specif ID and remove duplicates
+                List<String> listBySpecificID = getCapturedByIdAndType(capture.getId(), type);
+                listBySpecificID = removeDuplicates(listBySpecificID);
+
+                //add at CaptureTemplate capture
+                add(capture, listBySpecificID);
+
+                //verify vulnerabilities
+                if ("async".equalsIgnoreCase(type)) {
+                    verifyVulnerabilities(capture);
+                }
+
+                System.out.println("Attempt OK >> " + attempt);
+                attempt = 0;
+
+            } catch (Exception e) {
+                System.out.println("Attempt >> " + attempt++);
+                pcap.close();
+                pcap = null;
+                e.printStackTrace();
+            }
+        } while (attempt > 0);
+
+        System.out.println(capture);
 
         return capture;
 
+    }
+
+    private void verifyVulnerabilities(CaptureTemplate capture) {
+        capture.getCaptureList()
+                .forEach(captured -> {
+
+                    if (captured.getTitle().equalsIgnoreCase("HTTP/1.1 307")) {
+                        captured.getVulnerabilities().add("307 Redirect Vulnerability");
+
+                    } else if (captured.getTitle().equalsIgnoreCase("GET /authorize?")
+                        || captured.getTitle().equalsIgnoreCase("GET /authorizationServer/authorize/")
+                        || captured.getTitle().equalsIgnoreCase("GET /client/callback")) {
+
+                        //avaliar se contem parametro state preenchido e se contem parametro iss
+
+                        String url = captured.getValue().split(" ")[1];
+
+                        String getState = verifyUrl(url, "state");
+                        if(getState == null || "".equalsIgnoreCase(getState)) {
+                            captured.getVulnerabilities().add("CSRF Vulnerability");
+                        }
+
+                        String getIss = verifyUrl(url, "iss");
+                        if(getIss == null || "".equalsIgnoreCase(getIss)) {
+                            captured.getVulnerabilities().add("MixUp Vulnerability");
+                        }
+                    }
+
+                });
+
+    }
+
+    protected String verifyUrl(String url, String value) {
+
+        String[] values = url.split("\\?")[1].split("&");
+        for (String v: values) {
+            if (v.startsWith(value)) {
+                if (v.split("=").length > 1) {
+                    return v.split("=")[1];
+                }
+
+            }
+        }
+
+        return "";
     }
 
     private List<String> removeDuplicates(List<String> listBySpecificID) {
@@ -96,7 +174,7 @@ public class CaptureService {
         List<String> result = new ArrayList<>();
         String duplicateLine = "";
 
-        for (String line: listBySpecificID) {
+        for (String line : listBySpecificID) {
 
             if (!duplicateLine.equalsIgnoreCase(line)) {
                 result.add(line);
@@ -107,7 +185,7 @@ public class CaptureService {
         return result;
     }
 
-    private List<String> getCapturedById(int id) {
+    private List<String> getCapturedByIdAndType(int id, String type) {
 
         List<String> result = new ArrayList<>();
         AtomicBoolean end = new AtomicBoolean(false);
@@ -115,12 +193,12 @@ public class CaptureService {
         CaptureTemplateMemoryRepository.allPcapFiles
                 .forEach(line -> {
 
-                    if (line.equalsIgnoreCase("init id:" + id) || end.get()) {
+                    if (line.equalsIgnoreCase(type + "_init_id_" + id) || end.get()) {
 
                         result.add(line);
                         end.set(true);
 
-                        if (line.equalsIgnoreCase("end id:" + id)) {
+                        if (line.equalsIgnoreCase(type + "_end_id_" + id)) {
                             end.set(false);
                         }
                     }
@@ -136,86 +214,82 @@ public class CaptureService {
 
         listBySpecificID.forEach(line -> {
 
-                    if (findForPostResponse.get()) {
-                        if (line.contains("HTTP/1.1 200")) {
+            if (findForPostResponse.get()) {
+                if (line.contains("HTTP/1.1 200")) {
 
-                            Captured captured = new Captured();
-                            captured.setId(counter.get());
-                            captured.setTitle("HTTP/1.1 200");
-                            captured.setValue(line);
+                    Captured captured = new Captured();
+                    captured.setId(counter.get());
+                    captured.setTitle("HTTP/1.1 200");
+                    captured.setValue(line);
 
-                            capture.getCaptureList().add(captured);
-
-                            capture.setEndFile(counter.addAndGet(1));
-
-                            findForPostResponse.set(false);
-                        }
-                    }
-
-                    validation.forEach(value -> {
-                        if (line.contains(value)) {
-                            Captured captured = new Captured();
-                            captured.setId(counter.get());
-                            captured.setTitle(value);
-                            captured.setValue(line);
-
-                            capture.getCaptureList().add(captured);
-
-                            findForPostResponse.set(true);
-                        }
-                    });
+                    capture.getCaptureList().add(captured);
 
                     capture.setEndFile(counter.addAndGet(1));
 
-                });
+                    findForPostResponse.set(false);
+                }
+            }
+
+            validation.forEach(value -> {
+                if (line.contains(value)) {
+                    Captured captured = new Captured();
+                    captured.setId(counter.get());
+                    captured.setTitle(value);
+                    captured.setValue(line);
+
+                    capture.getCaptureList().add(captured);
+
+                    findForPostResponse.set(true);
+                }
+            });
+
+            capture.setEndFile(counter.addAndGet(1));
+
+        });
 
     }
 
-    private void execute(CaptureTemplate capture, Pcap pcap) {
-        try {
+    private void execute(CaptureTemplate capture, Pcap pcap, String type) throws IOException {
 
-            pcap.loop(new PacketHandler() {
-                int counter = 1;
+        pcap.loop(new PacketHandler() {
+            int counter = 1;
 
-                long init =  CaptureTemplateMemoryRepository.allPcapFiles.size();
+            long init = CaptureTemplateMemoryRepository.allPcapFiles.size();
 
-                @Override
-                public boolean nextPacket(Packet packet) throws IOException {
-                    if (packet.hasProtocol(Protocol.TCP)) {
+            @Override
+            public boolean nextPacket(Packet packet) throws IOException {
+                if (packet.hasProtocol(Protocol.TCP)) {
 
-                        TCPPacket tcpPacket = (TCPPacket) packet.getPacket(Protocol.TCP);
-                        Buffer buffer = tcpPacket.getPayload();
-                        if (buffer != null) {
-                            System.out.println("TCP (" + counter + "): " + buffer);
+                    TCPPacket tcpPacket = (TCPPacket) packet.getPacket(Protocol.TCP);
+                    Buffer buffer = tcpPacket.getPayload();
+                    if (buffer != null) {
+                        //System.out.println("TCP (" + counter + "): " + buffer);
 
-                            if(counter >= init) {
-                                CaptureTemplateMemoryRepository.allPcapFiles.add(buffer.toString());
-                            }
-                            counter++;
+                        if (counter >= init) {
+                            CaptureTemplateMemoryRepository.allPcapFiles.add(buffer.toString());
                         }
-
-
+                        counter++;
                     }
-                    return true;
+
+
                 }
+                return true;
+            }
 
 
-            });
+        });
 
-            CaptureTemplateMemoryRepository.allPcapFiles.add("end id:"+capture.getId());
+        CaptureTemplateMemoryRepository.allPcapFiles.add(type + "_end_id_" + capture.getId());
 
-            CaptureTemplateMemoryRepository.allPcapFiles
-                    .forEach(s -> {
-                        //System.out.println(s);
-                        if(s.contains("end id:")) {
-                            System.out.println(s);
-                        }
-                    });
+        CaptureTemplateMemoryRepository.allPcapFiles
+                .forEach(s -> {
+                    //System.out.println(s);
+                    if (s.contains("_end_id_")) {
+                        System.out.println(s);
+                    }
+                });
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void prepareFile() {
@@ -244,11 +318,5 @@ public class CaptureService {
 
     }
 
-    public static void main(String[] args) {
 
-        String cpf = "000221.982.048-35";
-        String novoCpf = cpf.substring(3);
-        System.out.println(novoCpf);
-    }
-
-    }
+}

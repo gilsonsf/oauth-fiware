@@ -76,7 +76,7 @@ public class AuthorizationServerController {
     }
 
     @PostMapping(value = "/mixup/oauth2/token")
-    public ResponseEntity mixupToken(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<OAuth2Token> mixupToken(@RequestHeader("Authorization") String authorization,
                                              @RequestBody String body) {
 
         String authorizationCode = body
@@ -87,11 +87,13 @@ public class AuthorizationServerController {
                 Base64.getDecoder()
                         .decode(authorization.split(" ")[1].getBytes()));
 
+        OAuth2Token token = new OAuth2Token();
         ClientTemplate client = TemplateMemoryRepository.findByClientId(credentials.split(":")[0]);
 
+        token.setTokenType("Client was attacked by Mix Up : " + client);
         LOGGER.info("Client was attacked by Mix Up : " + client);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return new ResponseEntity<>(token, HttpStatus.OK);
 
     }
 

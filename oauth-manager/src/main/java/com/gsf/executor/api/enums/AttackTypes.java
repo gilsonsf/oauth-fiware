@@ -3,9 +3,8 @@ package com.gsf.executor.api.enums;
 public enum AttackTypes {
 
     NONE(0),
-    REDIRECT_307(1),
-    MIXUP(2),
-    CSRF(3);
+    MIXUP(1),
+    CSRF(2);
 
     private final int id;
 

@@ -57,7 +57,7 @@ AS --> USER: 302 Redirect redirect_uri + <font color=red>authorization_code
 USER x->? : **GET** redirect_uri, <font color=red>authorization_code
     note right of  USER #LightYellow
         //Attacker// intercepta redirecionamento
-        para o AS e envia o //link// para a Vítima
+        para o Client e envia o //link// para a Vítima
     end note
 
 

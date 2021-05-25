@@ -5,13 +5,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClientEventPublisher {
+public class ClientCaptureEventPublisher {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishCustomEvent(final ClientEventObject event) {
-        System.out.println("Publishing client event. ");
-        ClientEvent clientEvent = new ClientEvent(this, event);
+    public void publishCustomEvent(final ClientCaptureEventObject event) {
+        System.out.println("Publishing client capture event. ");
+        ClientCaptureEvent clientEvent = new ClientCaptureEvent(this, event);
         applicationEventPublisher.publishEvent(clientEvent);
     }
 }

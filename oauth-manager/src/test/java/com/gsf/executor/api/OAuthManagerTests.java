@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@SpringBootTest
+//@SpringBootTest
 class OAuthManagerTests {
 
     @Autowired
@@ -201,7 +201,9 @@ class OAuthManagerTests {
 
     @Test
     public void testTask() {
-        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(4);
+        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(76);
+
+        //userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
 
         //new OAuthCSRFAttackTask(clientTemplate);
         //new OAuth307RedirectAttackTask(clientTemplate);

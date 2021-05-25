@@ -59,7 +59,7 @@
     },
     "urls": {
       "urlAuthorize":"https://account.lab.fiware.org/oauth2/authorize",
-      "redirectUri":"http://localhost:9001/client/callback",
+      "redirectUri":"https://localhost:8443/client/callback",
       "urlToken":"https://account.lab.fiware.org/oauth2/token",
       "entities":"http://localhost:1027/v2/entities/",
       "iss": null
@@ -88,6 +88,28 @@
     }
   },
   {
+    "id":40,
+    "clientId":"ad38ef5d-576c-4678-8d51-16bd4145568c",
+    "secret":"cd1ba436-6060-4b9d-9474-073e9f84c9b7",
+    "responseType":"code",
+    "state":"mixup_https_state",
+    "authorizationServerName": "mixup-https",
+    "code":null,
+    "token": {
+      "accessToken":null,
+      "tokenType":null,
+      "expiresIn":null,
+      "refreshToken":null
+    },
+    "urls": {
+      "urlAuthorize":"https://localhost:443/mixup/authorize",
+      "redirectUri":"https://localhost:8443/client/callback",
+      "urlToken":"https://localhost:443/authorizationServer/mixup/oauth2/token",
+      "entities":"",
+      "iss": null
+    }
+  },
+  {
     "id":5,
     "clientId":"attacker-id",
     "secret":"attacker-secret",
@@ -102,9 +124,9 @@
       "refreshToken":null
     },
     "urls": {
-      "urlAuthorize":"https://localhost:8443/authorizationServer/authorize",
+      "urlAuthorize":"https://localhost:443/authorizationServer/authorize",
       "redirectUri":"https://localhost:8443/client/callback",
-      "urlToken":"https://localhost:8443/authorizationServer/oauth2/token",
+      "urlToken":"https://localhost:443/authorizationServer/oauth2/token",
       "entities":"",
       "iss": null
     }

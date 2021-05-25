@@ -1,6 +1,6 @@
 <html>
 	<head>
-	    <title>Analysis Traffic</title>
+	    <title>Analyse Network Traffic</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -67,43 +67,73 @@
 	            messageOutput.id;
 
 				messageOutput.captureDate;
-				messageOutput.user;
+				//messageOutput.user;
 				messageOutput.captureList;
 
 				var list =  messageOutput.captureList;
 				for (position in list) {
 					var pHeader = document.createElement('p');
 					pHeader.style.wordWrap = 'break-word';
-					pHeader.appendChild(document.createTextNode(list[position].title));
+					var headerValue = list[position].title + " captureId:" +  messageOutput.id;
+					pHeader.appendChild(document.createTextNode(headerValue));
 					pHeader.style.fontWeight = 'bold';
 
 					var p = document.createElement('p');
 					p.style.wordWrap = 'break-word';
 					p.appendChild(document.createTextNode(list[position].value + "  "));
 
-					 if (list[position].title == 'HTTP/1.1 307') {
+					var vulnerabilities = list[position].vulnerabilities;
+					for (v in vulnerabilities) {
 
-						 var link = document.createElement("a");
-						 link.setAttribute("href", "https://tools.ietf.org/id/draft-ietf-oauth-security-topics-08.html#rfc.section.3.9");
-						 link.setAttribute("target", "_blank");
-						 link.classList.add("label");
+						 if (vulnerabilities[v] == '307 Redirect Vulnerability') {
 
-						 //link.classList.add("label-warning"); //yellow
-						 link.classList.add("label-info"); //light green
-						 //link.classList.add("label-danger"); //red
+							 var link = document.createElement("a");
+							 link.setAttribute("href", "https://tools.ietf.org/id/draft-ietf-oauth-security-topics-08.html#rfc.section.3.9");
+							 link.setAttribute("target", "_blank");
+							 link.classList.add("label");
 
-						 link.appendChild(document.createTextNode("307 Redirect Vulnerability"));
+							 link.classList.add("label-info"); //light green
 
-						 p.appendChild(link);
+							 link.appendChild(document.createTextNode("307 Redirect Vulnerability"));
 
-						// p.appendChild(document.createTextNode(list[position].value + "  mais texto "));
+							 p.appendChild(link);
 
-					 }
+						 }
+
+						 if (vulnerabilities[v] == 'CSRF Vulnerability') {
+
+							 var link = document.createElement("a");
+							 link.setAttribute("href", "https://datatracker.ietf.org/doc/html/rfc6749");
+							 link.setAttribute("target", "_blank");
+							 link.classList.add("label");
+
+							 link.classList.add("label-warning"); //yellow
+
+							 link.appendChild(document.createTextNode("CSRF Vulnerability"));
+
+							 p.appendChild(link);
+
+						 }
+
+						 if (vulnerabilities[v] == 'MixUp Vulnerability') {
+
+							 var link = document.createElement("a");
+							 link.setAttribute("href", "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-mix-up-mitigation-01");
+							 link.setAttribute("target", "_blank");
+							 link.classList.add("label");
+
+							 link.classList.add("label-danger"); //red
+
+							 link.appendChild(document.createTextNode("MixUp Vulnerability"));
+
+							 p.appendChild(link);
+
+						 }
+					}
 
 					response.appendChild(pHeader);
 					response.appendChild(p);
 				}
-
 
 	        }
 
@@ -113,21 +143,31 @@
 	
 	<body onload="disconnect()">
 
-		<div>
-		
-		
-			<div>
-				<input type="text" id="from" placeholder="Choose a nickname"/>
+		<div class="container">
+
+			<h2>Analyse Network Traffic</h2>
+			<br />
+			<div class="form-group">
+				<span class="label label-info">307 Redirect Vulnerability</span>
+				<span class="label label-warning">CSRF Vulnerability</span>
+				<span class="label label-danger">MixUp Vulnerability</span>
 			</div>
 			<br />
+<!--			<div>-->
+<!--				<div class="form-group">-->
+<!--					<p><strong>Execution Time:</strong></p>-->
+<!--					<input type="text" id="from" placeholder="time (minutes)"/>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<br />-->
 		    <div>
-		        <button id="connect" onclick="connect();">Connect</button>
+				<button id="connect" onclick="connect();">Check Vulnerabilities</button>
 		        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
 		    </div>
 		    <br />
 		    <div id="conversationDiv">
-		        <input type="text" id="text" placeholder="Write a message..."/>
-		        <button id="sendMessage" onclick="sendMessage();">Send</button>
+<!--		        <input type="text" id="text" placeholder="Write a message..."/>-->
+<!--		        <button id="sendMessage" onclick="sendMessage();">Send</button>-->
 		        <p id="response"></p>
 		    </div>
 		</div>
