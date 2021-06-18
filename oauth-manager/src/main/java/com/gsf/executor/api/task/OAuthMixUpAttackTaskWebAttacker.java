@@ -32,7 +32,4 @@ public class OAuthMixUpAttackTaskWebAttacker extends GenericTask {
 
         LOGGER.info("OAuthMixUpAttackTaskWebAttacker End  "+ user);
     }
-
-
-
 }

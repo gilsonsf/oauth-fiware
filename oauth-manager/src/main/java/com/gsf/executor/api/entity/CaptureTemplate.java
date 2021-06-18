@@ -16,6 +16,7 @@ public class CaptureTemplate {
     long initFile;
     long endFile;
     String type;
+    String flowType;
     LocalDateTime captureDate;
     UserTemplate user;
     List<Captured> captureList = new ArrayList<>();

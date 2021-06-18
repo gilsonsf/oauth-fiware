@@ -8,6 +8,7 @@ RUN sh -c 'touch /app.jar'
 
 COPY target/classes /src/main/resources
 
+
 # creates a mount point
 VOLUME /tmp
 

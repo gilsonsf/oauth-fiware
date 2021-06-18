@@ -5,16 +5,8 @@ spring:
   datasource:
     url:jdbc:h2:mem:testdb
 
-#server:
-#  port: 8080
-
 server:
-  port: 8443
-  ssl:
-    key-store: classpath:mkyong.p12
-    key-store-password: 123456
-    key-store-type: PKCS12
-
+  port: 8080
 
 logging:
   level:
@@ -25,5 +17,5 @@ logging:
     file: "%d %p %c{1.} [%t] %m%n"
   file: C:/dev/dummy-authorization-server.log
 
-
-  # security.require-ssl=true
+oauthmanager:
+  clients: external-config/client-template.json

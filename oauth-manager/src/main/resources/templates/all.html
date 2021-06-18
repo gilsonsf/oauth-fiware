@@ -15,6 +15,7 @@
         <tr>
             <th> Id </th>
             <th> Type </th>
+            <th> Flow Type </th>
             <th> Time/Hour </th>
             <th> User </th>
             <th> AS </th>
@@ -28,6 +29,7 @@
         <tr th:each="captured : ${capturedList}">
             <td><span th:text="${captured.id}"> Id </span></td>
             <td><span th:text="${captured.type}"> Type </span></td>
+            <td><span th:text="${captured.flowType}"> Flow Type </span></td>
             <td><span th:text="${captured.captureDate}"> Time/Hour </span></td>
             <td><span th:text="${captured.user.name}"> User </span></td>
             <td><span th:text="${captured.user.as}"> AS </span></td>

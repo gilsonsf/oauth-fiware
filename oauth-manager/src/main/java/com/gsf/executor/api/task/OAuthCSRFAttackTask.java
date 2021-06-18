@@ -21,7 +21,12 @@ public class OAuthCSRFAttackTask extends GenericTask {
 
         UserTemplate userAttacker = UserTemplateMemoryRepository.findById(50);
 
-        userAttacker.setAs(user.getAs());
+        if (user.getAs().equalsIgnoreCase("fiwarelab")) {
+            userAttacker = user;
+        } else {
+            userAttacker.setAs(user.getAs());
+        }
+
 
         accessClient(userAttacker);
 

@@ -4,6 +4,7 @@ import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.service.ManagerService;
 import com.gsf.executor.api.task.GenericTask;
+import com.gsf.executor.api.task.OAuthCSRFAttackTask;
 import com.gsf.executor.api.task.OAuthHonestClientTask;
 import com.gsf.executor.api.task.OAuthMixUpAttackTask;
 import com.gsf.executor.api.task.OAuthMixUpAttackTaskWebAttacker;
@@ -199,16 +200,16 @@ class OAuthManagerTests {
         FileUtils.copyFile(scrFile, new File("C:\\dev\\Test.jpeg"), true);
     }
 
-    @Test
+   // @Test
     public void testTask() {
-        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(76);
+        UserTemplate userTemplate = UserTemplateMemoryRepository.findById(4);
 
-        userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
+        //userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
 
-        //new OAuthCSRFAttackTask(clientTemplate);
+        new OAuthCSRFAttackTask(userTemplate);
         //new OAuth307RedirectAttackTask(clientTemplate);
         //new OAuthHonestClientTask(userTemplate);
-        new OAuthMixUpAttackTaskWebAttacker(userTemplate);
+        //new OAuthMixUpAttackTaskWebAttacker(userTemplate);
 
         //new OAuthMixUpAttackTask(userTemplate);
 

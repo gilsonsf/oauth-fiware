@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.sql.Driver;
 import java.util.concurrent.TimeUnit;
 
 public class SeleniumConfig {
@@ -19,7 +18,7 @@ public class SeleniumConfig {
     }
 
     static {
-        System.setProperty("webdriver.chrome.driver", "C:\\Development\\chromedriver_win32\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Development\\chromedriver_win32_90\\chromedriver.exe");
     }
 
 

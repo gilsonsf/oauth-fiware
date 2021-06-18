@@ -66,7 +66,7 @@ public class PainelController {
     }
 
     @GetMapping("/execution")
-    public String execution(Model model, String userName, String asId, int flowId, String minutes) {
+    public String execution(Model model, String userName, String asId, int flowId) {
 
         AttackTypes flowType = Utilities.getAttackTypesById(flowId);
 
@@ -82,6 +82,7 @@ public class PainelController {
         }
 
         CaptureTemplate captureTemplate = captureService.execute(userSelected, "sync");
+        captureTemplate.setFlowType(flowType.name());
 
         CaptureTemplateMemoryRepository.addCaptureTemplate(captureTemplate);
 

@@ -11,6 +11,7 @@ import io.pkts.buffer.Buffer;
 import io.pkts.packet.Packet;
 import io.pkts.packet.TCPPacket;
 import io.pkts.protocol.Protocol;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CaptureService {
+
+    @Value("${oauthmanager.captureFile}")
+    private String fileCapture;
+
+    @Value("${oauthmanager.captureFileHTTPS}")
+    private String fileCaptureHTTPS;
+
 
     private List<String> validation = Arrays.asList("GET / HTTP/1.1",
             "GET /client/authorize",
@@ -86,9 +94,15 @@ public class CaptureService {
         Pcap pcap = null;
         do {
             try {
-               // Thread.sleep(5000L);
+                Thread.sleep(5000L);
+
+                if("fiwarelab".equalsIgnoreCase(user.getAs())) {
+                    pcap = Pcap.openStream(fileCaptureHTTPS);
+                } else {
+                    pcap = Pcap.openStream(fileCapture);
+
+                }
                 //pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump.pcap");
-                pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\oauth-manager\\src\\main\\resources\\tcpdump22.pcap");
 
                 execute(capture, pcap, type);
 
@@ -111,14 +125,16 @@ public class CaptureService {
                 attempt = 0;
 
             } catch (Exception e) {
-                System.out.println("Attempt >> " + attempt++);
-                pcap.close();
+                System.out.println("Attempt NOK >> " + attempt++);
+                if (pcap != null) {
+                    pcap.close();
+                }
                 pcap = null;
                 e.printStackTrace();
             }
         } while (attempt > 0);
 
-        System.out.println(capture);
+        //System.out.println(capture);
 
         return capture;
 
