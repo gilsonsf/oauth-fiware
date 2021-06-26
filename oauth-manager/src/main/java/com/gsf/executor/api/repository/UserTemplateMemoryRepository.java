@@ -55,7 +55,7 @@ public class UserTemplateMemoryRepository {
     public static UserTemplate findByNameAndAS(String name, String as) {
         return getUsers().stream()
                 .filter(c -> (c.getName().equalsIgnoreCase(name) && c.getAs().equalsIgnoreCase(as)))
-                .findFirst().get();
+                .findFirst().orElse(null);
 
     }
 

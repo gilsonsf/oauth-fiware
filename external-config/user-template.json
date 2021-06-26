@@ -48,8 +48,6 @@
     "siteUrl": "http://localhost:9001",
     "as": "dummy"
   },
-
-
   {
     "id":50,
     "name":"Attacker",
@@ -59,18 +57,10 @@
     "as": ""
   },
   {
-    "id":40,
-    "name":"Gilson (HTTP)",
-    "login":"gilsonsfn@gmail.com",
-    "password":"tgsist10",
-    "siteUrl": "http://localhost:9001",
-    "as": "fiwarelab"
-  },
-  {
     "id":76,
-    "name":"Gilson (HTTPS)",
-    "login":"gilsonsfn@gmail.com",
-    "password":"tgsist10",
+    "name":"Gil (HTTPS)",
+    "login":"test@test.com",
+    "password":"test",
     "siteUrl": "https://localhost:8443",
     "as": "fiwarelab"
   }

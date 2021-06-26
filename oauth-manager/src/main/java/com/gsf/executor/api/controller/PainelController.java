@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Controller
 public class PainelController {
 
@@ -72,10 +74,14 @@ public class PainelController {
 
         UserTemplate userSelected = UserTemplateMemoryRepository.findByNameAndAS(userName, asId);
 
+        if (isNull(userSelected)) {
+            return "error";
+        }
+
         managerService.createTaskSync(userSelected, flowType);
 
         try {
-            //espera 30 segundo para o gravar o arquivo
+            //espera 20 segundo para o gravar o arquivo
             Thread.sleep(20000L);
         } catch (InterruptedException e) {
             e.printStackTrace();

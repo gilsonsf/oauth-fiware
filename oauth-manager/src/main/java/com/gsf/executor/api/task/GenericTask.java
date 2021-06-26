@@ -2,35 +2,29 @@ package com.gsf.executor.api.task;
 
 import com.gsf.executor.api.config.SeleniumConfig;
 import com.gsf.executor.api.entity.UserTemplate;
-import lombok.Getter;
-import lombok.ToString;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
 import static java.util.Objects.nonNull;
 
-@Getter
-@ToString
-@Service
+
 public abstract class GenericTask {
 
     protected Logger LOGGER = LoggerFactory.getLogger(GenericTask.class);
 
     protected SeleniumConfig seleniumConfig;
 
-
     public GenericTask(){}
 
-    public GenericTask(UserTemplate client) {
+    public GenericTask(UserTemplate user) {
         super();
         this.seleniumConfig = new SeleniumConfig();
-        executeTask(client);
+        executeTask(user);
     }
 
     public abstract void executeTask(UserTemplate user);

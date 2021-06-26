@@ -169,7 +169,7 @@ CREATE TABLE `iot` (
 
 LOCK TABLES `iot` WRITE;
 /*!40000 ALTER TABLE `iot` DISABLE KEYS */;
-INSERT INTO `iot` VALUES ('iot_sensor_00000000-0000-0000-0000-000000000000','e9f7c64ec2895eec281f8fd36e588d1bc762bcca',NULL,'tutorial-dckr-site-0000-xpresswebapp');
+INSERT INTO `iot` VALUES ('iot_sensor_00000000-0000-0000-0000-000000000000','e9f7c64ec2895eec281f8fd36e588d1bc762bcca',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c');
 /*!40000 ALTER TABLE `iot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,9 +289,9 @@ CREATE TABLE `oauth_client` (
 LOCK TABLES `oauth_client` WRITE;
 /*!40000 ALTER TABLE `oauth_client` DISABLE KEYS */;
 INSERT INTO `oauth_client` VALUES
-('tutorial-dckr-site-0000-xpresswebapp','FIWARE Tutorial',
-  'FIWARE Application protected by OAuth2 and Keyrock',  'tutorial-dckr-site-0000-clientsecret',
-  'http://localhost:3000','http://localhost:3000/login',NULL,'default',
+('ad38ef5d-576c-4678-8d51-16bd4145568c','FIWARE Tutorial',
+  'FIWARE Application protected by OAuth2 and Keyrock',  'cd1ba436-6060-4b9d-9474-073e9f84c9b7',
+  'http://localhost:9001','http://localhost:9001/client/callback',NULL,'default',
   'authorization_code,implicit,password,client_credentials,refresh_token','code',NULL,NULL,NULL,'bearer,permanent', NULL),
 ('trusted-dckr-app-0000-000000000000','Trusted Application',
   'Second application protected by OAuth2 and Keyrock','trusted-dckr-app-0000-clientsecret',
@@ -416,7 +416,7 @@ CREATE TABLE `pep_proxy` (
 
 LOCK TABLES `pep_proxy` WRITE;
 /*!40000 ALTER TABLE `pep_proxy` DISABLE KEYS */;
-INSERT INTO `pep_proxy` VALUES ('pep_proxy_00000000-0000-0000-0000-000000000000','e9f7c64ec2895eec281f8fd36e588d1bc762bcca',NULL,'tutorial-dckr-site-0000-xpresswebapp');
+INSERT INTO `pep_proxy` VALUES ('pep_proxy_00000000-0000-0000-0000-000000000000','e9f7c64ec2895eec281f8fd36e588d1bc762bcca',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c');
 /*!40000 ALTER TABLE `pep_proxy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,10 +456,10 @@ INSERT INTO `permission` VALUES
 ('4','Manage authorizations',NULL,1,NULL,NULL,NULL,'idm_admin_app',0),
 ('5','Get and assign all public application roles',NULL,1,NULL,NULL,NULL,'idm_admin_app',0),
 ('6','Get and assign only public owned roles',NULL,1,NULL,NULL,NULL,'idm_admin_app',0),
-('increase-stck-0000-0000-000000000000','Order Stock','Increase Stock Count',0,'GET','/app/order-stock',NULL,'tutorial-dckr-site-0000-xpresswebapp',0),
-('entrance-open-0000-0000-000000000000','Unlock','Unlock main entrance',0,'POST','/door/unlock',NULL,'tutorial-dckr-site-0000-xpresswebapp',0),
-('alrmbell-ring-0000-0000-000000000000','Ring Alarm Bell',NULL,0,'POST','/bell/ring',NULL,'tutorial-dckr-site-0000-xpresswebapp',0),
-('pricechg-stck-0000-0000-000000000000','Access Price Changes',NULL,0,'GET','/app/price-change',NULL,'tutorial-dckr-site-0000-xpresswebapp',0);
+('increase-stck-0000-0000-000000000000','Order Stock','Increase Stock Count',0,'GET','/app/order-stock',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c',0),
+('entrance-open-0000-0000-000000000000','Unlock','Unlock main entrance',0,'POST','/door/unlock',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c',0),
+('alrmbell-ring-0000-0000-000000000000','Ring Alarm Bell',NULL,0,'POST','/bell/ring',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c',0),
+('pricechg-stck-0000-0000-000000000000','Access Price Changes',NULL,0,'GET','/app/price-change',NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c',0);
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,8 +488,8 @@ CREATE TABLE `role` (
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
 INSERT INTO `role` VALUES 
-('security-role-0000-0000-000000000000','Security Team',0,'tutorial-dckr-site-0000-xpresswebapp'),
-('managers-role-0000-0000-000000000000','Management',0,'tutorial-dckr-site-0000-xpresswebapp'),
+('security-role-0000-0000-000000000000','Security Team',0,'ad38ef5d-576c-4678-8d51-16bd4145568c'),
+('managers-role-0000-0000-000000000000','Management',0,'ad38ef5d-576c-4678-8d51-16bd4145568c'),
 ('provider','Provider',1,'idm_admin_app'),('purchaser','Purchaser',1,'idm_admin_app');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -531,12 +531,12 @@ INSERT INTO `role_assignment` VALUES
 (2,'member','8ca60ce9-32f9-42d6-a013-a19b3af0c13d','provider','74f5299e-3247-468c-affb-957cda03f0c4',NULL),
 (3,NULL,'222eda27-958b-4f0c-a5cb-e4114fb170c3','provider',NULL,'admin'),
 (4,NULL,'222eda27-958b-4f0c-a5cb-e4114fb170c3','provider',NULL,'96154659-cb3b-4d2d-afef-18d6aec0518e'),
-(5,NULL,'tutorial-dckr-site-0000-xpresswebapp','provider',NULL,'aaaaaaaa-good-0000-0000-000000000000'),
+(5,NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c','provider',NULL,'aaaaaaaa-good-0000-0000-000000000000'),
 (6,NULL,'trusted-dckr-app-0000-000000000000','provider',NULL,'aaaaaaaa-good-0000-0000-000000000000'),
-(10,NULL,'tutorial-dckr-site-0000-xpresswebapp','security-role-0000-0000-000000000000',NULL,'cccccccc-good-0000-0000-000000000000'),
-(11,'member','tutorial-dckr-site-0000-xpresswebapp','security-role-0000-0000-000000000000','security-team-0000-0000-000000000000',NULL),
-(12,NULL,'tutorial-dckr-site-0000-xpresswebapp','managers-role-0000-0000-000000000000',NULL,'bbbbbbbb-good-0000-0000-000000000000'),
-(13,'member','tutorial-dckr-site-0000-xpresswebapp','managers-role-0000-0000-000000000000','managers-team-0000-0000-000000000000',NULL);
+(10,NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c','security-role-0000-0000-000000000000',NULL,'cccccccc-good-0000-0000-000000000000'),
+(11,'member','ad38ef5d-576c-4678-8d51-16bd4145568c','security-role-0000-0000-000000000000','security-team-0000-0000-000000000000',NULL),
+(12,NULL,'ad38ef5d-576c-4678-8d51-16bd4145568c','managers-role-0000-0000-000000000000',NULL,'bbbbbbbb-good-0000-0000-000000000000'),
+(13,'member','ad38ef5d-576c-4678-8d51-16bd4145568c','managers-role-0000-0000-000000000000','managers-team-0000-0000-000000000000',NULL);
 
 /*!40000 ALTER TABLE `role_assignment` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -608,7 +608,7 @@ CREATE TABLE `trusted_application` (
 LOCK TABLES `trusted_application` WRITE;
 /*!40000 ALTER TABLE `trusted_application` DISABLE KEYS */;
 INSERT INTO `trusted_application` VALUES 
-(1,'tutorial-dckr-site-0000-xpresswebapp','trusted-dckr-app-0000-000000000000');
+(1,'ad38ef5d-576c-4678-8d51-16bd4145568c','trusted-dckr-app-0000-000000000000');
 /*!40000 ALTER TABLE `trusted_application` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -37,11 +37,6 @@ public class ClientController {
         String[] as = this.asName.split("_");
 
         if(as.length == 2) {
-            //attacker scenario
-
-            //passo 2
-//            ClientTemplate honest = TemplateMemoryRepository.copyValues(TemplateMemoryRepository.findByAS(as[0]));
-//            this.loggedClient = TemplateMemoryRepository.copyValues(TemplateMemoryRepository.findByAS(as[1])); //this is attacker
 
             ClientTemplate honest = TemplateMemoryRepository.findByAS(as[0]).clone();
             this.loggedClient = TemplateMemoryRepository.findByAS(as[1]).clone(); //this is attacker
@@ -52,7 +47,6 @@ public class ClientController {
             authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(honest);
 
         } else {
-            //honest
             this.loggedClient = TemplateMemoryRepository.findByAS(as[0]).clone();
             authorizationEndpoint = authorizationCodeTokenService.getAuthorizationEndpoint(this.loggedClient);
 
@@ -81,9 +75,7 @@ public class ClientController {
 
         OAuth2Token token = null;
         if("fiwarelab".equalsIgnoreCase(loggedClient.getAuthorizationServerName())) {
-            //provisorio
             token = TemplateMemoryRepository.createTokenFiwareLabTemporary(code);
-            //token = authorizationCodeTokenService.getToken(code, this.loggedClient);
 
         } else {
             token = authorizationCodeTokenService.getToken(code, this.loggedClient);

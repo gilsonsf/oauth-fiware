@@ -19,6 +19,7 @@ logging:
   file: C:/dev/oauth-manager.log
 
 oauthmanager:
-    users: C:/dev/docker/oauth-fiware/oauth-manager/src/main/resources/user-templateXX.json
+    users: C:/dev/docker/oauth-fiware/oauth-manager/src/main/resources/user-template.json
     captureFile: C:/dev/docker/oauth-fiware/fiware-idm/tcpdump/tcpdump.pcap
     captureFileHTTPS: C:/dev/docker/oauth-fiware/dummy-https/tcpdump/tcpdump.pcap
+    seleniumConfig: C:/Development/chromedriver_win32_90/chromedriver.exe

@@ -6,8 +6,8 @@ public class OAuthHonestClientTask extends GenericTask {
 
     public OAuthHonestClientTask(){}
 
-    public OAuthHonestClientTask(UserTemplate client) {
-        super(client);
+    public OAuthHonestClientTask(UserTemplate user) {
+        super(user);
     }
 
     @Override

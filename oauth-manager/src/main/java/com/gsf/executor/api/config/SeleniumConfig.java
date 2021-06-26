@@ -4,23 +4,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class SeleniumConfig {
 
     private WebDriver driver;
 
+
+
     public SeleniumConfig() {
         //driver = new ChromeDriver();
-
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
-
-    static {
-        System.setProperty("webdriver.chrome.driver", "C:\\Development\\chromedriver_win32_90\\chromedriver.exe");
-    }
-
 
 
     public void close() {

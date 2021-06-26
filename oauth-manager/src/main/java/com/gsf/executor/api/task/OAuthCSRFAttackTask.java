@@ -9,8 +9,8 @@ public class OAuthCSRFAttackTask extends GenericTask {
 
     public OAuthCSRFAttackTask(){}
 
-    public OAuthCSRFAttackTask(UserTemplate client) {
-        super(client);
+    public OAuthCSRFAttackTask(UserTemplate user) {
+        super(user);
     }
 
     @Override

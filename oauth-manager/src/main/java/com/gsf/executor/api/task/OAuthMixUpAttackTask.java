@@ -2,13 +2,15 @@ package com.gsf.executor.api.task;
 
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OAuthMixUpAttackTask extends GenericTask {
 
     public OAuthMixUpAttackTask(){}
 
-    public OAuthMixUpAttackTask(UserTemplate client) {
-        super(client);
+    public OAuthMixUpAttackTask(UserTemplate user) {
+        super(user);
     }
 
     @Override

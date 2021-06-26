@@ -33,9 +33,9 @@
   },
   {
     "id":5,
-    "name":"Gilson",
-    "login":"gilsonsfn@gmail.com",
-    "password":"tgsist10",
+    "name":"FIWARE-LAB-USER",
+    "login":"test@test.com",
+    "password":"test",
     "siteUrl": "http://localhost:9001",
     "as": "fiwarelab"
   }

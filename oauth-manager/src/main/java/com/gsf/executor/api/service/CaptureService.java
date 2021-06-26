@@ -62,8 +62,6 @@ public class CaptureService {
             "GET /client/callback",
             "POST /authorizationServer/oauth2/token HTTP/1.1");
 
-    //
-
     public static void main(String[] args) {
         UserTemplate userTemplate = UserTemplateMemoryRepository.findById(1);
         new CaptureService().execute(userTemplate, "async");
@@ -102,8 +100,6 @@ public class CaptureService {
                     pcap = Pcap.openStream(fileCapture);
 
                 }
-                //pcap = Pcap.openStream("C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump.pcap");
-
                 execute(capture, pcap, type);
 
                 pcap.close();
@@ -133,8 +129,6 @@ public class CaptureService {
                 e.printStackTrace();
             }
         } while (attempt > 0);
-
-        //System.out.println(capture);
 
         return capture;
 
@@ -299,7 +293,6 @@ public class CaptureService {
 
         CaptureTemplateMemoryRepository.allPcapFiles
                 .forEach(s -> {
-                    //System.out.println(s);
                     if (s.contains("_end_id_")) {
                         System.out.println(s);
                     }
@@ -307,32 +300,5 @@ public class CaptureService {
 
 
     }
-
-    public void prepareFile() {
-        String FILE_TO_MOVE = "C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump-header.pcap";
-        String TARGET_FILE = "C:\\dev\\docker\\oauth-fiware\\fiware-idm\\tcpdump\\tcpdump.pcap";
-
-        //delete original tcpdump
-        File fileTcpdump = new File(TARGET_FILE);
-        fileTcpdump.delete();
-
-        //create new tcpdump apartir do header
-
-        File fileTcpdumpHeader = new File(FILE_TO_MOVE);
-        File newfileTcpdump = new File(TARGET_FILE);
-
-        Path oldPath = Paths.get(FILE_TO_MOVE);
-        Path newPath = newfileTcpdump.toPath();
-        try {
-            Files.copy(oldPath, newPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //fileToMove.delete();
-        //Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
-
-    }
-
 
 }

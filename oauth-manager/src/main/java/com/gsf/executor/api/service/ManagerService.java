@@ -1,17 +1,13 @@
 package com.gsf.executor.api.service;
 
-import com.gsf.executor.api.enums.AttackTypes;
 import com.gsf.executor.api.entity.UserTemplate;
+import com.gsf.executor.api.enums.AttackTypes;
 import com.gsf.executor.api.event.ClientCaptureEventObject;
 import com.gsf.executor.api.event.ClientCaptureEventPublisher;
 import com.gsf.executor.api.event.ClientEventObject;
 import com.gsf.executor.api.event.ClientEventPublisher;
 import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.task.GenericTask;
-import com.gsf.executor.api.task.OAuth307RedirectAttackTask;
-import com.gsf.executor.api.task.OAuthCSRFAttackTask;
-import com.gsf.executor.api.task.OAuthHonestClientTask;
-import com.gsf.executor.api.task.OAuthMixUpAttackTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-import static com.gsf.executor.api.enums.AttackTypes.*;
+import static com.gsf.executor.api.enums.AttackTypes.MIXUP;
+import static com.gsf.executor.api.enums.AttackTypes.NONE;
 
 @Service
 public class ManagerService {
@@ -41,6 +38,9 @@ public class ManagerService {
     @Autowired
     @Qualifier("taskExecutor")
     private Executor executor;
+
+    @Autowired
+    private OAuthTaskService oAuthTaskService;
 
     @Async
     public CompletableFuture<GenericTask> createTask(UserTemplate user, AttackTypes attackType) {
@@ -63,23 +63,23 @@ public class ManagerService {
 
     }
 
-    private GenericTask createGenericTask(UserTemplate client, AttackTypes attackType) {
+    private GenericTask createGenericTask(UserTemplate user, AttackTypes attackType) {
 
         if (attackType == NONE) {
-            return new OAuthHonestClientTask(client);
+            return oAuthTaskService.getOAuthHonestClientTask(user);
         }
 
         GenericTask task = null;
 
         switch (attackType) {
             case MIXUP:
-                task = new OAuthMixUpAttackTask(client);
+                task = oAuthTaskService.getOAuthMixUpAttackTask(user);
                 break;
             case CSRF:
-                task = new OAuthCSRFAttackTask(client);
+                task = oAuthTaskService.getOAuthCSRFAttackTask(user);
                 break;
             default:
-                task = new OAuthHonestClientTask(client);
+                task = oAuthTaskService.getOAuthHonestClientTask(user);
         }
 
         return task;

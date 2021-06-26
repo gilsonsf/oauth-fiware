@@ -3,11 +3,7 @@ package com.gsf.executor.api;
 import com.gsf.executor.api.entity.UserTemplate;
 import com.gsf.executor.api.repository.UserTemplateMemoryRepository;
 import com.gsf.executor.api.service.ManagerService;
-import com.gsf.executor.api.task.GenericTask;
 import com.gsf.executor.api.task.OAuthCSRFAttackTask;
-import com.gsf.executor.api.task.OAuthHonestClientTask;
-import com.gsf.executor.api.task.OAuthMixUpAttackTask;
-import com.gsf.executor.api.task.OAuthMixUpAttackTaskWebAttacker;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -206,7 +202,7 @@ class OAuthManagerTests {
 
         //userTemplate.setAs(userTemplate.getAs()+"_mixup-https");
 
-        new OAuthCSRFAttackTask(userTemplate);
+        //new OAuthCSRFAttackTask(userTemplate);
         //new OAuth307RedirectAttackTask(clientTemplate);
         //new OAuthHonestClientTask(userTemplate);
         //new OAuthMixUpAttackTaskWebAttacker(userTemplate);
