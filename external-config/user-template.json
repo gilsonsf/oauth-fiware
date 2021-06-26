@@ -58,7 +58,7 @@
   },
   {
     "id":76,
-    "name":"Gil (HTTPS)",
+    "name":"FIWARE-LAB-USER",
     "login":"test@test.com",
     "password":"test",
     "siteUrl": "https://localhost:8443",
